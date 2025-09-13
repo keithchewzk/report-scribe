@@ -32,7 +32,7 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 5. **Additional Information**: Free-form text field for context (planned)
 
 ### Report Generation & Refinement
-- **API Integration**: POST requests to `/report/` endpoint with structured JSON payload
+- **API Integration**: POST requests to `/report/generate` endpoint with structured JSON payload
 - **Form Validation**: Real-time validation ensuring all required fields are completed
 - **Loading States**: Visual feedback during report generation with animated spinner
 - **Error Handling**: User-friendly error messages for network/validation failures
@@ -85,7 +85,7 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 - **Data Validation**: Enhanced Pydantic models with Field constraints and Literal types
 - **API Endpoints**:
   - `GET /health` - Health check endpoint (general module)
-  - `POST /report/` - Generate student reports from structured input (report module)
+  - `POST /report/generate` - Generate student reports from structured input (report module)
   - `GET /` - Root endpoint with API information (general module)
 - **Request Format**: `{ "name": "string" (min_length=1), "gender": Literal["Male", "Female"], "positive_attributes": ["string"] (can be empty) }`
 - **Response Format**: `{ "success": boolean, "report": "string", "message": "string" }`
@@ -109,7 +109,7 @@ Report Scribe addresses these pain points by providing a purpose-built interface
    - Selects positive attributes from scrollable multi-select list
    - Optionally adds custom positive attributes via text input
    - Clicks "Generate Report" button (validates form first)
-   - System makes POST request to `/report/` with form data
+   - System makes POST request to `/report/generate` with form data
    - Loading spinner shows during API call
    - Success/error feedback displayed to user
 
@@ -179,4 +179,4 @@ docker run -p 8000:8000 report-scribe-backend
 **API Endpoints:**
 - Health Check: http://localhost:8000/health
 - Interactive Docs: http://localhost:8000/docs
-- Report Generation: POST http://localhost:8000/report/
+- Report Generation: POST http://localhost:8000/report/generate

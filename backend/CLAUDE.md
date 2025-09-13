@@ -91,7 +91,7 @@ backend/
 - **Use Case**: Load balancer health checks, monitoring systems
 
 ### Report Generation
-- **Endpoint**: `POST /report/` (with `/report` prefix from main.py)
+- **Endpoint**: `POST /report/generate` (with `/report` prefix from main.py)
 - **Content-Type**: `application/json`
 - **Purpose**: Generate student reports from structured data
 
@@ -111,7 +111,7 @@ class ReportResponse(BaseModel):
     message: str = ""           # Additional status message
 ```
 
-**Example Request to `/report/`:**
+**Example Request to `/report/generate`:**
 ```json
 {
   "name": "Keith Chew",
@@ -282,7 +282,7 @@ python-multipart==0.0.6   # Form data support
 curl http://localhost:8000/health
 
 # Report generation
-curl -X POST "http://localhost:8000/report/" \
+curl -X POST "http://localhost:8000/report/generate" \
   -H "Content-Type: application/json" \
   -d '{"name": "Test Student", "gender": "Male", "positive_attributes": ["Shows enthusiasm"]}'
 ```

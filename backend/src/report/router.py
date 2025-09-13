@@ -13,7 +13,7 @@ router = APIRouter()
 report_service = ReportService()
 
 
-@router.post("/", response_model=ReportResponse)
+@router.post("/generate", response_model=ReportResponse)
 async def generate_report(request: ReportRequest):
     """Generate a student report based on provided information"""
 
