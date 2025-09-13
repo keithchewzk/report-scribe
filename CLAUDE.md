@@ -22,29 +22,54 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 ## Core Features
 
 ### Student Information Input
-1. **Student Name**: Text input field
-2. **Gender Selection**: Single select (Male/Female) for LLM context clarity
-3. **Commendable Attributes**: Multi-select from 20+ predefined options with custom attribute addition capability
-4. **Areas for Improvement**: Multi-select from 20+ predefined options with custom attribute addition capability
-5. **Additional Information**: Free-form text field for context that doesn't fit structured fields
+1. **Student Name**: Text input field with real-time validation
+2. **Gender Selection**: Single select dropdown (Male/Female) for LLM context clarity
+3. **Positive Attributes**: Multi-select from 10 predefined options with custom attribute addition capability
+   - Pre-loaded attributes like "Shows enthusiasm for learning", "Demonstrates leadership skills"
+   - Scrollable list with checkbox selection
+   - Custom attribute input with instant addition to selection list
+4. **Areas for Improvement**: Multi-select component (planned - similar to positive attributes)
+5. **Additional Information**: Free-form text field for context (planned)
 
 ### Report Generation & Refinement
-- AI-powered report generation based on structured input
-- Post-generation refinement capabilities
-- Support for re-prompting (e.g., "make the report more parent-friendly")
-- Tone and style adjustments based on teacher feedback
+- **API Integration**: POST requests to `/api/report` endpoint with structured JSON payload
+- **Form Validation**: Real-time validation ensuring all required fields are completed
+- **Loading States**: Visual feedback during report generation with animated spinner
+- **Error Handling**: User-friendly error messages for network/validation failures
+- **Post-generation refinement capabilities** (planned)
+- **Support for re-prompting** (planned)
+
+### Current Implementation Status
+✅ **Completed Features:**
+- Two-panel dark theme interface (StudentDetailsPanel + ReportPanel)
+- Form state management with controlled components
+- Name and Gender input fields
+- Positive Attributes multi-select with custom additions
+- Generate Report button with API integration
+- Form validation and error handling
+
+🚧 **In Development:**
+- Areas for Improvement multi-select field
+- Additional Information textarea
+- Report display and refinement interface
 
 ## Technical Architecture
 
 ### Frontend
-- **Framework**: React 19.1.0
+- **Framework**: React 19.1.0 with hooks (useState for state management)
 - **Build Tool**: Vite
 - **Location**: `/frontend/`
-- **Purpose**: User interface for data input, report generation, and editing
+- **Architecture**: Modular component-based with Index File Pattern (Option 3)
+- **Styling**: Inline styles with dark theme color palette
+- **State Management**: Lifted state pattern with controlled components
+- **Purpose**: Two-panel interface for data input, report generation, and editing
 
 ### Backend
 - **Framework**: Python FastAPI
 - **Location**: `/backend/`
+- **API Endpoints**: 
+  - `POST /api/report` - Generate student reports from structured input
+- **Expected Payload**: `{ "name": "string", "gender": "Male|Female", "positive_attributes": ["array"] }`
 - **Purpose**: API endpoints, AI integration, data processing
 
 ### Development Workflow
@@ -54,14 +79,24 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 
 ## Key User Flows
 
-1. **Report Creation Flow**:
-   - Teacher enters student information
-   - Selects relevant attributes from multi-select lists
-   - Adds any additional context
-   - Generates initial report via AI
-   - Reviews and refines report as needed
+1. **Current Report Creation Flow**:
+   - Teacher enters student name in responsive text field
+   - Selects gender from dropdown (Male/Female)
+   - Selects positive attributes from scrollable multi-select list
+   - Optionally adds custom positive attributes via text input
+   - Clicks "Generate Report" button (validates form first)
+   - System makes POST request to `/api/report` with form data
+   - Loading spinner shows during API call
+   - Success/error feedback displayed to user
 
-2. **Batch Processing** (Future Enhancement):
+2. **Planned Enhanced Flow**:
+   - Add "Areas for Improvement" multi-select field
+   - Add "Additional Information" textarea
+   - Display generated report in right panel
+   - Enable report refinement and re-prompting
+   - Add export/copy functionality
+
+3. **Future Batch Processing**:
    - Process multiple students from a single class
    - Consistent formatting and tone across reports
 

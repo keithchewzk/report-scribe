@@ -21,16 +21,20 @@ Report Scribe is a web application for school teachers to generate AI-powered st
 
 ### Component Structure
 
-The frontend follows a **modular component architecture** using the **Index File Pattern (Option 3)**:
+The frontend follows a **modular component architecture** using the **Index File Pattern (Option 3)** with **lifted state management**:
 
 ```
 src/
 ├── components/
 │   ├── StudentDetailsPanel/          # Left panel - student input
-│   │   ├── index.jsx                # Main panel component
+│   │   ├── index.jsx                # Main panel with form state management
 │   │   ├── Header.jsx               # Panel header
-│   │   ├── Form.jsx                 # Student input form
-│   │   └── Button.jsx               # Generate report button
+│   │   ├── Form/                    # Student form components
+│   │   │   ├── index.jsx           # Form coordinator with state
+│   │   │   ├── NameField.jsx       # Student name input (controlled)
+│   │   │   ├── GenderField.jsx     # Gender selection (controlled)
+│   │   │   └── PositiveAttributesField.jsx # Multi-select with custom input
+│   │   └── Button.jsx               # Generate report button with API calls
 │   └── ReportPanel/                 # Right panel - report display
 │       ├── index.jsx                # Main panel component
 │       ├── Report.jsx               # Report display area
@@ -47,7 +51,12 @@ src/
 - Main component is named `index.jsx` for clean imports
 - Sub-components use simple, contextual names
 
-**2. Clean Import Paths**
+**2. Lifted State Management**
+- Form state lives in `StudentDetailsPanel/index.jsx`
+- All form fields are controlled components receiving props
+- Unidirectional data flow: state down, events up
+
+**3. Clean Import Paths**
 ```javascript
 // Clean imports thanks to index.jsx pattern
 import StudentDetailsPanel from './components/StudentDetailsPanel'
@@ -56,14 +65,24 @@ import ReportPanel from './components/ReportPanel'
 // Internal sub-component imports (within component directory)
 import Header from './Header'
 import Form from './Form'
+import NameField from './NameField'
 ```
 
-**3. Single Responsibility**
-- Each component has one clear purpose
-- Logical separation between panels and their sub-components
-- Easy to maintain and test independently
+**4. Controlled Components Pattern**
+```javascript
+// Parent manages state
+const [formData, setFormData] = useState({ name: '', gender: '', positiveAttributes: [] })
 
-**4. Contextual Naming**
+// Child receives value and onChange
+<NameField value={formData.name} onChange={(value) => updateFormData('name', value)} />
+```
+
+**5. Single Responsibility**
+- Each component has one clear purpose
+- Form fields handle only their UI and user interactions
+- State management separated from presentation logic
+
+**6. Contextual Naming**
 - Sub-components use simple names (`Header`, `Form`, `Button`)
 - Context comes from their parent directory location
 - Avoids repetitive naming like `StudentDetailsHeader`
@@ -116,16 +135,42 @@ const colors = {
 ## Core Features Implementation
 
 ### Student Information Input (Left Panel)
-1. **Student Name**: Text input field
-2. **Gender Selection**: Single select dropdown
-3. **Commendable Attributes**: Multi-select with custom additions
-4. **Areas for Improvement**: Multi-select with custom additions
-5. **Additional Information**: Free-form textarea
+
+**✅ Implemented Components:**
+
+**1. NameField (`NameField.jsx`)**
+- Controlled text input with real-time state updates
+- Responsive flex layout (grows with available space)
+- Focus/blur styling with border color transitions
+- Form validation integration
+
+**2. GenderField (`GenderField.jsx`)**  
+- Controlled select dropdown with Male/Female options
+- Fixed width (120px) for optimal layout
+- Dark theme styling with hover effects
+
+**3. PositiveAttributesField (`PositiveAttributesField.jsx`)**
+- Multi-select with 10 predefined positive attributes
+- Scrollable list (300px height) with checkbox interface  
+- Custom attribute addition via text input + "Add Custom" button
+- Real-time selection counter display
+- Hover effects and visual feedback
+
+**4. Generate Report Button (`Button.jsx`)**
+- Form validation (name, gender, ≥1 positive attribute required)
+- API integration with `POST /api/report`
+- Loading states with animated spinner
+- Error handling with user-friendly messages
+- Disabled state when form invalid or loading
+
+**🚧 Planned Components:**
+- **Areas for Improvement**: Multi-select field (similar to PositiveAttributesField)
+- **Additional Information**: Free-form textarea for extra context
 
 ### Report Generation & Refinement (Right Panel)
-- **Report Display**: Generated report with formatting
-- **Refinement Tools**: Re-prompting and style adjustments
-- **Export Options**: Copy, download functionality
+- **Report Display**: Placeholder for generated report formatting (Report.jsx)
+- **Refinement Tools**: Placeholder for re-prompting interface (Refinement.jsx)
+- **Export Options**: Copy, download functionality (planned)
 
 ## Development Workflow
 
@@ -140,9 +185,25 @@ npm run preview      # Preview production build
 
 **For Major Components (New Panels):**
 1. Create directory: `src/components/ComponentName/`
-2. Create `index.jsx` as main component
+2. Create `index.jsx` as main component with state management
 3. Add sub-components with simple names
 4. Import in parent component
+
+**For Form Fields (Controlled Components):**
+1. Create in `Form/` directory (e.g., `Form/NewField.jsx`)
+2. Accept `value` and `onChange` props
+3. Use contextual names (`NewField`, not `StudentNewField`)
+4. Follow controlled component pattern:
+   ```javascript
+   function NewField({ value, onChange }) {
+     return (
+       <input 
+         value={value} 
+         onChange={(e) => onChange(e.target.value)} 
+       />
+     )
+   }
+   ```
 
 **For Sub-Components:**
 1. Create in parent component directory
@@ -200,6 +261,63 @@ export default ComponentName
 - **Consistent Patterns**: Follow established naming and organization conventions
 - **Accessibility**: Ensure keyboard navigation and screen reader support
 
+## State Management Examples
+
+### Lifted State Pattern
+```javascript
+// StudentDetailsPanel/index.jsx - State Container
+const [formData, setFormData] = useState({
+  name: '', gender: '', positiveAttributes: []
+})
+
+return (
+  <div>
+    <Header />
+    <Form onFormDataChange={setFormData} />
+    <Button formData={formData} />
+  </div>
+)
+```
+
+### Form Coordinator
+```javascript
+// Form/index.jsx - State Coordinator  
+function StudentForm({ onFormDataChange }) {
+  const [formData, setFormData] = useState({ name: '', gender: '', positiveAttributes: [] })
+  
+  const updateFormData = (field, value) => {
+    const newFormData = { ...formData, [field]: value }
+    setFormData(newFormData)
+    onFormDataChange(newFormData)
+  }
+
+  return (
+    <div>
+      <NameField value={formData.name} onChange={(value) => updateFormData('name', value)} />
+      <GenderField value={formData.gender} onChange={(value) => updateFormData('gender', value)} />
+    </div>
+  )
+}
+```
+
+### API Integration
+```javascript
+// Button.jsx - API Calls
+const handleGenerateReport = async () => {
+  const payload = {
+    name: formData.name.trim(),
+    gender: formData.gender,
+    positive_attributes: formData.positiveAttributes
+  }
+
+  const response = await fetch('/api/report', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+}
+```
+
 ## Import Examples
 
 ```javascript
@@ -212,9 +330,10 @@ import Header from './Header'
 import Form from './Form'
 import Button from './Button'
 
-// Within ReportPanel/index.jsx  
-import Report from './Report'
-import Refinement from './Refinement'
+// Within Form/index.jsx
+import NameField from './NameField'
+import GenderField from './GenderField'
+import PositiveAttributesField from './PositiveAttributesField'
 ```
 
 This architecture provides a solid foundation for building out the Report Scribe frontend with maintainable, scalable code.
