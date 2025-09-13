@@ -157,8 +157,8 @@ const colors = {
 - Hover effects and visual feedback
 
 **4. Generate Report Button (`Button.jsx`)**
-- Form validation (name, gender, ≥1 positive attribute required)
-- API integration with `POST /api/report`
+- Form validation (name and gender required, positive attributes optional)
+- API integration with `POST /report/generate`
 - Loading states with animated spinner
 - Error handling with user-friendly messages
 - Disabled state when form invalid or loading
@@ -191,12 +191,12 @@ docker run -d -p 3000:80 --name report-scribe-frontend-container report-scribe-f
 
 # Access application
 # Frontend: http://localhost:3000
-# API Proxy: http://localhost:3000/api/* -> backend:8000
+# Report API Proxy: http://localhost:3000/report/* -> backend:8000/report/*
 ```
 
 ### Docker Architecture
 - **Multi-stage Build**: Node.js 20-alpine for building + nginx-alpine for serving
-- **API Proxy**: Built-in nginx proxy routes `/api/*` requests to backend
+- **Report API Proxy**: Built-in nginx proxy routes `/report/*` requests to backend
 - **SPA Support**: Proper routing with `try_files` for single-page app
 - **Health Check**: Container health monitoring on port 80
 - **Production Optimized**: Minimal image size with static file serving
@@ -327,10 +327,10 @@ const handleGenerateReport = async () => {
   const payload = {
     name: formData.name.trim(),
     gender: formData.gender,
-    positive_attributes: formData.positiveAttributes
+    positive_attributes: formData.positiveAttributes  // Can be empty array
   }
 
-  const response = await fetch('/api/report', {
+  const response = await fetch('/report/generate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)

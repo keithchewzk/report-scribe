@@ -46,15 +46,16 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 - Two-panel dark theme interface (StudentDetailsPanel + ReportPanel)
 - Form state management with controlled components
 - Name and Gender input fields
-- Positive Attributes multi-select with custom additions
-- Generate Report button with API integration
-- Form validation and error handling
+- Positive Attributes multi-select with custom additions (optional)
+- Generate Report button with `/report/generate` API integration
+- Form validation (name and gender required, positive attributes optional)
+- Error handling and loading states
 
 **Backend:**
 - FastAPI application with enhanced Pydantic data validation (Field constraints)
 - Modular architecture with domain-separated routers (general + report modules)
 - `/health` endpoint for monitoring
-- `/report/` endpoint for report generation (moved to report module)
+- `/report/generate` endpoint for report generation (moved to report module)
 - Mock report generator with pronoun handling
 - CORS configuration for frontend integration
 - Docker containerization with optimized src/ directory structure
@@ -97,7 +98,7 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 - **Backend**: FastAPI with Uvicorn on http://localhost:8000
 - **Integration**: CORS enabled for cross-origin requests
 - **Docker**: Both services containerized for production deployment
-  - Frontend: Multi-stage build with nginx proxy on http://localhost:3000
+  - Frontend: Multi-stage build with nginx proxy for `/report/*` routes on http://localhost:3000
   - Backend: Python slim container with health checks on http://localhost:8000
 - **API Communication**: RESTful JSON API between frontend and backend
 
