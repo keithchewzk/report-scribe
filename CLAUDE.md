@@ -93,7 +93,9 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 - **Frontend**: Vite dev server on http://localhost:5173
 - **Backend**: FastAPI with Uvicorn on http://localhost:8000
 - **Integration**: CORS enabled for cross-origin requests
-- **Docker**: Both services can be containerized for deployment
+- **Docker**: Both services containerized for production deployment
+  - Frontend: Multi-stage build with nginx proxy on http://localhost:3000
+  - Backend: Python slim container with health checks on http://localhost:8000
 - **API Communication**: RESTful JSON API between frontend and backend
 
 ## Key User Flows
@@ -136,11 +138,21 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 ## Commands
 
 ### Frontend Development
+
+**Local Development:**
 ```bash
 cd frontend
-npm run dev          # Start development server
+npm run dev          # Start development server (http://localhost:5173)
 npm run build        # Build for production
 npm run preview      # Preview production build
+```
+
+**Docker Development:**
+```bash
+cd frontend
+docker build -t report-scribe-frontend .
+docker run -d -p 3000:80 --name report-scribe-frontend-container report-scribe-frontend
+# Access at http://localhost:3000
 ```
 
 ### Backend Development
