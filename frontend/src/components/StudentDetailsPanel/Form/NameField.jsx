@@ -1,4 +1,4 @@
-function NameField() {
+function NameField({ value, onChange }) {
   return (
     <div style={{ flex: 1, minWidth: '200px' }}>
       <label 
@@ -16,6 +16,8 @@ function NameField() {
       <input
         id="student-name"
         type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
         placeholder="Enter student's full name"
         style={{
           width: '100%',

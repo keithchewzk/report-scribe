@@ -1,8 +1,15 @@
+import { useState } from 'react'
 import Header from './Header'
 import Form from './Form'
 import Button from './Button'
 
 function StudentDetailsPanel() {
+  const [formData, setFormData] = useState({
+    name: '',
+    gender: '',
+    positiveAttributes: []
+  })
+
   return (
     <div style={{ 
       width: '50%', 
@@ -12,8 +19,8 @@ function StudentDetailsPanel() {
       backgroundColor: '#2a2a2a'
     }}>
       <Header />
-      <Form />
-      <Button />
+      <Form onFormDataChange={setFormData} />
+      <Button formData={formData} />
     </div>
   )
 }

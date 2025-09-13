@@ -1,8 +1,23 @@
+import { useState } from 'react'
 import NameField from './NameField'
 import GenderField from './GenderField'
 import PositiveAttributesField from './PositiveAttributesField'
 
-function StudentForm() {
+function StudentForm({ onFormDataChange }) {
+  const [formData, setFormData] = useState({
+    name: '',
+    gender: '',
+    positiveAttributes: []
+  })
+
+  const updateFormData = (field, value) => {
+    const newFormData = { ...formData, [field]: value }
+    setFormData(newFormData)
+    if (onFormDataChange) {
+      onFormDataChange(newFormData)
+    }
+  }
+
   return (
     <div style={{ 
       flex: 1, 
@@ -16,11 +31,20 @@ function StudentForm() {
         alignItems: 'flex-end',
         marginBottom: '24px'
       }}>
-        <NameField />
-        <GenderField />
+        <NameField 
+          value={formData.name}
+          onChange={(value) => updateFormData('name', value)}
+        />
+        <GenderField 
+          value={formData.gender}
+          onChange={(value) => updateFormData('gender', value)}
+        />
       </div>
       
-      <PositiveAttributesField />
+      <PositiveAttributesField 
+        selectedAttributes={formData.positiveAttributes}
+        onChange={(value) => updateFormData('positiveAttributes', value)}
+      />
       
       {/* Placeholder for additional form fields */}
       <div style={{ 

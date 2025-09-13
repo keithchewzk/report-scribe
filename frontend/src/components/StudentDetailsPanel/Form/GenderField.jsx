@@ -1,4 +1,4 @@
-function GenderField() {
+function GenderField({ value, onChange }) {
   return (
     <div style={{ width: '120px', flexShrink: 0 }}>
       <label 
@@ -15,6 +15,8 @@ function GenderField() {
       </label>
       <select
         id="student-gender"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
         style={{
           width: '100%',
           padding: '10px 12px',

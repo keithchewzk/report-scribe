@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-function PositiveAttributesField() {
+function PositiveAttributesField({ selectedAttributes, onChange }) {
   const predefinedAttributes = [
     "Shows enthusiasm for learning",
     "Demonstrates strong leadership skills",
@@ -15,22 +15,22 @@ function PositiveAttributesField() {
   ]
 
   const [availableAttributes, setAvailableAttributes] = useState(predefinedAttributes)
-  const [selectedAttributes, setSelectedAttributes] = useState([])
   const [customInput, setCustomInput] = useState('')
 
   const toggleAttribute = (attribute) => {
-    setSelectedAttributes(prev => 
-      prev.includes(attribute) 
-        ? prev.filter(attr => attr !== attribute)
-        : [...prev, attribute]
-    )
+    const newSelected = selectedAttributes.includes(attribute) 
+      ? selectedAttributes.filter(attr => attr !== attribute)
+      : [...selectedAttributes, attribute]
+    
+    onChange(newSelected)
   }
 
   const addCustomAttribute = () => {
     const trimmedInput = customInput.trim()
     if (trimmedInput && !availableAttributes.includes(trimmedInput)) {
       setAvailableAttributes(prev => [...prev, trimmedInput])
-      setSelectedAttributes(prev => [...prev, trimmedInput])
+      const newSelected = [...selectedAttributes, trimmedInput]
+      onChange(newSelected)
       setCustomInput('')
     }
   }
