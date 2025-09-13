@@ -1,9 +1,8 @@
 import logging
-from typing import List
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from schemas import ReportRequest, ReportResponse
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -24,19 +23,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-# Request/Response Models
-class ReportRequest(BaseModel):
-    name: str
-    gender: str
-    positive_attributes: List[str]
-
-
-class ReportResponse(BaseModel):
-    success: bool
-    report: str
-    message: str = ""
 
 
 # Health check endpoint
