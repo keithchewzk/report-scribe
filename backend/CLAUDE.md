@@ -40,21 +40,26 @@ Frontend (Display/Refinement)
 - Router inclusion for modular API endpoints
 - Logging configuration
 
-**2. API Router (`src/router.py`)**
-- All API endpoint definitions
-- Business logic and report generation functions
-- Error handling and validation
-- Request/response processing
+**2. General API Router (`src/router.py`)**
+- Health check and root endpoint definitions
+- General application information endpoints
+- No business logic - pure infrastructure endpoints
 
-**3. Data Models (`src/schemas.py`)**
-- `ReportRequest`: Enhanced input validation with Field constraints
+**3. Report Module (`src/report/`)**
+- **Router (`src/report/router.py`)**: Report-specific endpoints and business logic
+- **Schemas (`src/report/schemas.py`)**: Enhanced Pydantic models with Field constraints
+- **Domain Logic**: Report generation functions and validation
+
+**4. Data Models (`src/report/schemas.py`)**
+- `ReportRequest`: Enhanced input validation with Field constraints and Literal types
 - `ReportResponse`: Output response model
-- Type safety with Literal types and validation rules
+- Type safety with strict validation rules
 
-**4. Report Generation Logic**
+**5. Report Generation Logic**
 - Mock report generator with intelligent text composition
 - Dynamic pronoun handling (he/she, his/her)
 - Contextual attribute integration
+- Simplified validation (relies on Pydantic)
 
 ## Project Structure
 
@@ -63,8 +68,11 @@ backend/
 ├── src/                 # Source code directory
 │   ├── __init__.py      # Python package marker
 │   ├── main.py          # FastAPI app initialization and middleware
-│   ├── router.py        # API endpoints and business logic
-│   └── schemas.py       # Pydantic data models with validation
+│   ├── router.py        # General endpoints (health, root)
+│   └── report/          # Report domain module
+│       ├── __init__.py  # Python package marker
+│       ├── router.py    # Report-specific endpoints and business logic
+│       └── schemas.py   # Report Pydantic models with validation
 ├── requirements.txt     # Python dependencies
 ├── Dockerfile           # Docker build (copies src/ directory)
 ├── .dockerignore        # Docker build exclusions
@@ -83,7 +91,7 @@ backend/
 - **Use Case**: Load balancer health checks, monitoring systems
 
 ### Report Generation
-- **Endpoint**: `POST /api/report`
+- **Endpoint**: `POST /report/` (with `/report` prefix from main.py)
 - **Content-Type**: `application/json`
 - **Purpose**: Generate student reports from structured data
 
@@ -103,7 +111,7 @@ class ReportResponse(BaseModel):
     message: str = ""           # Additional status message
 ```
 
-**Example Request:**
+**Example Request to `/report/`:**
 ```json
 {
   "name": "Keith Chew",
@@ -128,10 +136,11 @@ class ReportResponse(BaseModel):
 ## Data Validation & Error Handling
 
 ### Input Validation
-- **Required Fields**: All fields in `ReportRequest` are mandatory
-- **Name Validation**: Must be non-empty string (min_length=1) after trimming
+- **Pydantic Validation**: All validation handled by Pydantic models (no manual checks)
+- **Name Validation**: Must be non-empty string (min_length=1 Field constraint)
 - **Gender Validation**: Must be exactly "Male" or "Female" (enforced by Literal type)
 - **Attributes Validation**: Must be a list (can be empty) of strings
+- **Error Responses**: 422 Unprocessable Entity with detailed validation messages
 
 ### Error Responses
 - **400 Bad Request**: Invalid input data (missing/invalid fields)
@@ -273,7 +282,7 @@ python-multipart==0.0.6   # Form data support
 curl http://localhost:8000/health
 
 # Report generation
-curl -X POST "http://localhost:8000/api/report" \
+curl -X POST "http://localhost:8000/report/" \
   -H "Content-Type: application/json" \
   -d '{"name": "Test Student", "gender": "Male", "positive_attributes": ["Shows enthusiasm"]}'
 ```

@@ -32,7 +32,7 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 5. **Additional Information**: Free-form text field for context (planned)
 
 ### Report Generation & Refinement
-- **API Integration**: POST requests to `/api/report` endpoint with structured JSON payload
+- **API Integration**: POST requests to `/report/` endpoint with structured JSON payload
 - **Form Validation**: Real-time validation ensuring all required fields are completed
 - **Loading States**: Visual feedback during report generation with animated spinner
 - **Error Handling**: User-friendly error messages for network/validation failures
@@ -52,9 +52,9 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 
 **Backend:**
 - FastAPI application with enhanced Pydantic data validation (Field constraints)
-- Modular architecture with separated concerns (router.py for API endpoints)
+- Modular architecture with domain-separated routers (general + report modules)
 - `/health` endpoint for monitoring
-- `/api/report` endpoint for report generation
+- `/report/` endpoint for report generation (moved to report module)
 - Mock report generator with pronoun handling
 - CORS configuration for frontend integration
 - Docker containerization with optimized src/ directory structure
@@ -81,12 +81,12 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 - **Framework**: Python FastAPI 0.104.1
 - **Server**: Uvicorn ASGI server with auto-reload
 - **Location**: `/backend/` (source code in `/backend/src/`)
-- **Architecture**: Modular structure with separated API routes, schemas, and app configuration
+- **Architecture**: Domain-driven modular structure with separated concerns (general + report modules)
 - **Data Validation**: Enhanced Pydantic models with Field constraints and Literal types
 - **API Endpoints**:
-  - `GET /health` - Health check endpoint
-  - `POST /api/report` - Generate student reports from structured input
-  - `GET /` - Root endpoint with API information
+  - `GET /health` - Health check endpoint (general module)
+  - `POST /report/` - Generate student reports from structured input (report module)
+  - `GET /` - Root endpoint with API information (general module)
 - **Request Format**: `{ "name": "string" (min_length=1), "gender": Literal["Male", "Female"], "positive_attributes": ["string"] (can be empty) }`
 - **Response Format**: `{ "success": boolean, "report": "string", "message": "string" }`
 - **Deployment**: Docker support with optimized src/ directory copying
@@ -109,7 +109,7 @@ Report Scribe addresses these pain points by providing a purpose-built interface
    - Selects positive attributes from scrollable multi-select list
    - Optionally adds custom positive attributes via text input
    - Clicks "Generate Report" button (validates form first)
-   - System makes POST request to `/api/report` with form data
+   - System makes POST request to `/report/` with form data
    - Loading spinner shows during API call
    - Success/error feedback displayed to user
 
@@ -179,4 +179,4 @@ docker run -p 8000:8000 report-scribe-backend
 **API Endpoints:**
 - Health Check: http://localhost:8000/health
 - Interactive Docs: http://localhost:8000/docs
-- Report Generation: POST http://localhost:8000/api/report
+- Report Generation: POST http://localhost:8000/report/
