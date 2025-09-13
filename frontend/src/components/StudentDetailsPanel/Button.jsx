@@ -7,8 +7,7 @@ function GenerateReportButton({ formData }) {
   const isFormValid = () => {
     return (
       formData.name.trim() !== '' &&
-      formData.gender !== '' &&
-      formData.positiveAttributes.length > 0
+      formData.gender !== ''
     )
   }
 
@@ -28,7 +27,7 @@ function GenerateReportButton({ formData }) {
         positive_attributes: formData.positiveAttributes
       }
 
-      const response = await fetch('/api/report', {
+      const response = await fetch('/report/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
