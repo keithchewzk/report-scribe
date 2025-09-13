@@ -1,0 +1,21 @@
+import Header from './Header'
+import Form from './Form'
+import Button from './Button'
+
+function StudentDetailsPanel() {
+  return (
+    <div style={{ 
+      width: '50%', 
+      borderRight: '1px solid #404040',
+      display: 'flex',
+      flexDirection: 'column',
+      backgroundColor: '#2a2a2a'
+    }}>
+      <Header />
+      <Form />
+      <Button />
+    </div>
+  )
+}
+
+export default StudentDetailsPanel

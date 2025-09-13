@@ -1,4 +1,5 @@
 import './App.css'
+import StudentDetailsPanel from './components/StudentDetailsPanel'
 
 function App() {
   return (
@@ -28,70 +29,7 @@ function App() {
       <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
         
         {/* Left Panel - Student Input */}
-        <div style={{ 
-          width: '50%', 
-          borderRight: '1px solid #404040',
-          display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: '#2a2a2a'
-        }}>
-          {/* Left Panel Header */}
-          <div style={{ 
-            padding: '16px 24px', 
-            borderBottom: '1px solid #404040',
-            backgroundColor: '#2a2a2a',
-            flexShrink: 0
-          }}>
-            <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '500', color: '#ffffff' }}>
-              Student Details
-            </h2>
-            <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: '#a0a0a0' }}>
-              Fill in the student information to generate a personalized report
-            </p>
-          </div>
-
-          {/* Left Panel Scrollable Content */}
-          <div style={{ 
-            flex: 1, 
-            overflowY: 'auto',
-            padding: '24px',
-            backgroundColor: '#2a2a2a'
-          }}>
-            <div style={{ 
-              height: '800px', 
-              backgroundColor: '#3a3a3a', 
-              border: '2px dashed #404040',
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '16px',
-              color: '#a0a0a0'
-            }}>
-              Student Input Form Components Will Go Here
-            </div>
-          </div>
-
-          {/* Left Panel Action Bar */}
-          <div style={{ 
-            padding: '16px 24px', 
-            borderTop: '1px solid #404040',
-            backgroundColor: '#2a2a2a',
-            flexShrink: 0
-          }}>
-            <div style={{ 
-              backgroundColor: '#3a3a3a', 
-              border: '2px dashed #404040',
-              borderRadius: '8px',
-              padding: '12px',
-              textAlign: 'center',
-              fontSize: '14px',
-              color: '#a0a0a0'
-            }}>
-              Generate Report Button Will Go Here
-            </div>
-          </div>
-        </div>
+        <StudentDetailsPanel />
 
         {/* Right Panel - Report Display & Refinement */}
         <div style={{ 
