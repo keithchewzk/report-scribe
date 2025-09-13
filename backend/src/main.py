@@ -2,8 +2,8 @@ import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from report.router import router as report_router
-from router import router
+from src.report.router import router as report_router
+from src.router import router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

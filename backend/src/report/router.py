@@ -1,27 +1,24 @@
 import logging
 
-from fastapi import APIRouter, HTTPException
-
-from .schemas import ReportRequest, ReportResponse
-from .services import ReportService
+from fastapi import APIRouter, Depends, HTTPException
+from src.report.dependencies import get_report_service
+from src.report.schemas import ReportRequest, ReportResponse
+from src.report.services import ReportService
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# Initialize the report service
-report_service = ReportService()
-
 
 @router.post("/generate", response_model=ReportResponse)
-async def generate_report(request: ReportRequest):
+async def generate_report(
+    request: ReportRequest, report_service: ReportService = Depends(get_report_service)
+):
     """Generate a student report based on provided information"""
 
     try:
-        # Log the incoming request
         logger.info(f"Generating report for student: {request.name}")
 
-        # Generate the report using the service
         report_content = report_service.generate_mock_report(request)
 
         logger.info(f"Successfully generated report for {request.name}")

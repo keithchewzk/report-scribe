@@ -1,4 +1,4 @@
-from .schemas import ReportRequest
+from src.report.schemas import ReportRequest
 
 
 class ReportService:
@@ -16,9 +16,7 @@ class ReportService:
 
         # Add positive attributes section
         if request.positive_attributes:
-            report += (
-                f"{request.name} has demonstrated several commendable qualities this term. "
-            )
+            report += f"{request.name} has demonstrated several commendable qualities this term. "
 
             # Use first few attributes in a sentence
             if len(request.positive_attributes) >= 3:
@@ -32,12 +30,12 @@ class ReportService:
             # Add remaining attributes if there are more
             if len(request.positive_attributes) > 3:
                 remaining = request.positive_attributes[3:]
-                report += f"Additionally, {request.name} {', '.join(remaining).lower()}. "
+                report += (
+                    f"Additionally, {request.name} {', '.join(remaining).lower()}. "
+                )
 
         # Add a general conclusion
-        report += (
-            f"\n\nOverall, {request.name} is a valued member of our classroom community. "
-        )
+        report += f"\n\nOverall, {request.name} is a valued member of our classroom community. "
         report += f"With continued effort and focus, {pronoun} will achieve even greater success in {possessive} academic journey."
 
         return report
