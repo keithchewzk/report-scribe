@@ -1,5 +1,6 @@
 import NameField from './NameField'
 import GenderField from './GenderField'
+import PositiveAttributesField from './PositiveAttributesField'
 
 function StudentForm() {
   return (
@@ -19,9 +20,11 @@ function StudentForm() {
         <GenderField />
       </div>
       
+      <PositiveAttributesField />
+      
       {/* Placeholder for additional form fields */}
       <div style={{ 
-        height: '600px', 
+        height: '400px', 
         backgroundColor: '#3a3a3a', 
         border: '2px dashed #404040',
         borderRadius: '8px',
