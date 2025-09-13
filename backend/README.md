@@ -4,6 +4,32 @@ A minimal FastAPI backend for generating AI-powered student reports.
 
 ## Quick Start
 
+Choose one of the following methods to run the backend:
+
+## Method 1: Docker (Recommended)
+
+### Prerequisites
+- Docker installed on your system
+
+### Running with Docker
+
+1. **Navigate to backend directory:**
+   ```bash
+   cd backend
+   ```
+
+2. **Build the Docker image:**
+   ```bash
+   docker build -t report-scribe-backend .
+   ```
+
+3. **Run the container:**
+   ```bash
+   docker run -p 8000:8000 report-scribe-backend
+   ```
+
+## Method 2: Local Development
+
 ### Prerequisites
 - Python 3.8 or higher
 - pip (Python package manager)
@@ -17,7 +43,7 @@ A minimal FastAPI backend for generating AI-powered student reports.
 
 2. **Create virtual environment (recommended):**
    ```bash
-   python -m venv venv
+   python3 -m venv venv
    
    # Activate virtual environment
    # On macOS/Linux:
@@ -128,7 +154,39 @@ The backend is configured to accept requests from the frontend development serve
 backend/
 ├── main.py              # Main FastAPI application
 ├── requirements.txt     # Python dependencies
+├── Dockerfile           # Docker configuration
+├── .dockerignore        # Docker ignore rules
+├── .gitignore           # Git ignore rules
 └── README.md           # This file
+```
+
+## Docker Commands
+
+### Building and Running
+```bash
+# Build the image
+docker build -t report-scribe-backend .
+
+# Run the container
+docker run -p 8000:8000 report-scribe-backend
+
+# Run with environment variables (if needed)
+docker run -p 8000:8000 -e ENVIRONMENT=production report-scribe-backend
+
+# Run in detached mode
+docker run -d -p 8000:8000 report-scribe-backend
+```
+
+### Development with Docker
+```bash
+# Build and run in one command
+docker build -t report-scribe-backend . && docker run -p 8000:8000 report-scribe-backend
+
+# View logs
+docker logs <container_id>
+
+# Stop container
+docker stop <container_id>
 ```
 
 ## Future Enhancements
