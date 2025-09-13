@@ -41,6 +41,8 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 
 ### Current Implementation Status
 ✅ **Completed Features:**
+
+**Frontend:**
 - Two-panel dark theme interface (StudentDetailsPanel + ReportPanel)
 - Form state management with controlled components
 - Name and Gender input fields
@@ -48,10 +50,20 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 - Generate Report button with API integration
 - Form validation and error handling
 
+**Backend:**
+- FastAPI application with Pydantic data validation
+- `/health` endpoint for monitoring
+- `/api/report` endpoint for report generation  
+- Mock report generator with pronoun handling
+- CORS configuration for frontend integration
+- Docker containerization support
+- Virtual environment setup with requirements.txt
+
 🚧 **In Development:**
 - Areas for Improvement multi-select field
 - Additional Information textarea
 - Report display and refinement interface
+- AI integration (OpenAI/Anthropic) for real report generation
 
 ## Technical Architecture
 
@@ -65,17 +77,24 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 - **Purpose**: Two-panel interface for data input, report generation, and editing
 
 ### Backend
-- **Framework**: Python FastAPI
+- **Framework**: Python FastAPI 0.104.1
+- **Server**: Uvicorn ASGI server with auto-reload
 - **Location**: `/backend/`
+- **Data Validation**: Pydantic models for request/response validation
 - **API Endpoints**: 
+  - `GET /health` - Health check endpoint
   - `POST /api/report` - Generate student reports from structured input
-- **Expected Payload**: `{ "name": "string", "gender": "Male|Female", "positive_attributes": ["array"] }`
-- **Purpose**: API endpoints, AI integration, data processing
+- **Request Format**: `{ "name": "string", "gender": "Male|Female", "positive_attributes": ["array"] }`
+- **Response Format**: `{ "success": boolean, "report": "string", "message": "string" }`
+- **Deployment**: Docker support with multi-stage builds
+- **Development**: Python virtual environment with dependency isolation
 
 ### Development Workflow
-- Frontend runs on Vite dev server during development
-- Backend provides REST API endpoints
-- Both services can be containerized with Docker for deployment
+- **Frontend**: Vite dev server on http://localhost:5173
+- **Backend**: FastAPI with Uvicorn on http://localhost:8000
+- **Integration**: CORS enabled for cross-origin requests
+- **Docker**: Both services can be containerized for deployment
+- **API Communication**: RESTful JSON API between frontend and backend
 
 ## Key User Flows
 
@@ -125,7 +144,24 @@ npm run preview      # Preview production build
 ```
 
 ### Backend Development
+
+**Local Development:**
 ```bash
 cd backend
-# Commands will be defined as backend is developed
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
+
+**Docker Development:**
+```bash
+cd backend
+docker build -t report-scribe-backend .
+docker run -p 8000:8000 report-scribe-backend
+```
+
+**API Endpoints:**
+- Health Check: http://localhost:8000/health
+- Interactive Docs: http://localhost:8000/docs
+- Report Generation: POST http://localhost:8000/api/report
