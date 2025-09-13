@@ -51,12 +51,13 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 - Form validation and error handling
 
 **Backend:**
-- FastAPI application with Pydantic data validation
+- FastAPI application with enhanced Pydantic data validation (Field constraints)
+- Modular architecture with separated concerns (router.py for API endpoints)
 - `/health` endpoint for monitoring
-- `/api/report` endpoint for report generation  
+- `/api/report` endpoint for report generation
 - Mock report generator with pronoun handling
 - CORS configuration for frontend integration
-- Docker containerization support
+- Docker containerization with optimized src/ directory structure
 - Virtual environment setup with requirements.txt
 
 🚧 **In Development:**
@@ -79,14 +80,16 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 ### Backend
 - **Framework**: Python FastAPI 0.104.1
 - **Server**: Uvicorn ASGI server with auto-reload
-- **Location**: `/backend/`
-- **Data Validation**: Pydantic models for request/response validation
-- **API Endpoints**: 
+- **Location**: `/backend/` (source code in `/backend/src/`)
+- **Architecture**: Modular structure with separated API routes, schemas, and app configuration
+- **Data Validation**: Enhanced Pydantic models with Field constraints and Literal types
+- **API Endpoints**:
   - `GET /health` - Health check endpoint
   - `POST /api/report` - Generate student reports from structured input
-- **Request Format**: `{ "name": "string", "gender": "Male|Female", "positive_attributes": ["array"] }`
+  - `GET /` - Root endpoint with API information
+- **Request Format**: `{ "name": "string" (min_length=1), "gender": Literal["Male", "Female"], "positive_attributes": ["string"] (can be empty) }`
 - **Response Format**: `{ "success": boolean, "report": "string", "message": "string" }`
-- **Deployment**: Docker support with multi-stage builds
+- **Deployment**: Docker support with optimized src/ directory copying
 - **Development**: Python virtual environment with dependency isolation
 
 ### Development Workflow
@@ -163,7 +166,7 @@ cd backend
 python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 **Docker Development:**

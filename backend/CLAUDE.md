@@ -34,18 +34,24 @@ Frontend (Display/Refinement)
 
 ### Core Components
 
-**1. FastAPI Application (`main.py`)**
+**1. FastAPI Application (`src/main.py`)**
 - Application initialization with metadata
 - CORS middleware configuration
-- Route definitions and error handling
+- Router inclusion for modular API endpoints
 - Logging configuration
 
-**2. Data Models**
-- `ReportRequest`: Input validation model
-- `ReportResponse`: Output response model
-- Type safety with Python annotations
+**2. API Router (`src/router.py`)**
+- All API endpoint definitions
+- Business logic and report generation functions
+- Error handling and validation
+- Request/response processing
 
-**3. Report Generation Logic**
+**3. Data Models (`src/schemas.py`)**
+- `ReportRequest`: Enhanced input validation with Field constraints
+- `ReportResponse`: Output response model
+- Type safety with Literal types and validation rules
+
+**4. Report Generation Logic**
 - Mock report generator with intelligent text composition
 - Dynamic pronoun handling (he/she, his/her)
 - Contextual attribute integration
@@ -54,14 +60,18 @@ Frontend (Display/Refinement)
 
 ```
 backend/
-├── main.py              # Main FastAPI application (130+ lines)
+├── src/                 # Source code directory
+│   ├── __init__.py      # Python package marker
+│   ├── main.py          # FastAPI app initialization and middleware
+│   ├── router.py        # API endpoints and business logic
+│   └── schemas.py       # Pydantic data models with validation
 ├── requirements.txt     # Python dependencies
-├── Dockerfile           # Multi-stage Docker build
+├── Dockerfile           # Docker build (copies src/ directory)
 ├── .dockerignore        # Docker build exclusions
 ├── .gitignore           # Git ignore rules
+├── CLAUDE.md           # Backend technical documentation
 ├── venv/               # Python virtual environment (ignored)
-├── __pycache__/        # Python cache (ignored)
-└── README.md           # Setup and usage instructions
+└── __pycache__/        # Python cache (ignored)
 ```
 
 ## API Endpoints
@@ -80,9 +90,9 @@ backend/
 **Request Schema:**
 ```python
 class ReportRequest(BaseModel):
-    name: str                    # Student's full name
-    gender: str                  # "Male" or "Female" for pronoun context
-    positive_attributes: List[str] # Array of positive characteristics
+    name: str = Field(..., min_length=1, description="Student's full name")
+    gender: Literal["Male", "Female"] = Field(..., description="Student's gender for pronoun context")
+    positive_attributes: list[str] = Field(..., description="List of positive attributes for the student")
 ```
 
 **Response Schema:**
@@ -119,9 +129,9 @@ class ReportResponse(BaseModel):
 
 ### Input Validation
 - **Required Fields**: All fields in `ReportRequest` are mandatory
-- **Name Validation**: Must be non-empty string after trimming
-- **Gender Validation**: Must be exactly "Male" or "Female"
-- **Attributes Validation**: Must contain at least one positive attribute
+- **Name Validation**: Must be non-empty string (min_length=1) after trimming
+- **Gender Validation**: Must be exactly "Male" or "Female" (enforced by Literal type)
+- **Attributes Validation**: Must be a list (can be empty) of strings
 
 ### Error Responses
 - **400 Bad Request**: Invalid input data (missing/invalid fields)
@@ -199,11 +209,11 @@ pip install -r requirements.txt
 
 ### Development Server
 ```bash
-# Auto-reload development server
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+# Auto-reload development server (from backend root)
+uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 
 # Alternative direct execution
-python main.py
+python -m src.main
 ```
 
 ### Development Features
@@ -216,10 +226,10 @@ python main.py
 
 ### Dockerfile Features
 - **Base Image**: `python:3.10-slim` (lightweight)
-- **Multi-stage Build**: Optimized dependency installation
+- **Optimized Build**: Copies only src/ directory for smaller image
 - **Environment Variables**: Proper Python configuration
 - **Health Check**: Built-in monitoring on `/health`
-- **Security**: Non-root user execution
+- **Clean Structure**: Separates configuration from source code
 
 ### Docker Commands
 ```bash
