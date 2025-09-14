@@ -1,4 +1,7 @@
-function Report({ reportData }) {
+import React from 'react'
+import { ReportDisplayProps } from '../../types'
+
+const Report: React.FC<ReportDisplayProps> = ({ reportData }) => {
   return (
     <div style={{
       padding: '16px 24px',

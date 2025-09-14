@@ -1,7 +1,9 @@
+import React from 'react'
+import { ReportPanelProps } from '../../types'
 import Report from './Report'
 import Refinement from './Refinement'
 
-function ReportPanel({ reportData }) {
+const ReportPanel: React.FC<ReportPanelProps> = ({ reportData }) => {
   return (
     <div style={{
       width: '50%',

@@ -1,10 +1,15 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
+import { StudentDetailsPanelProps, FormData } from '../../types'
 import Header from './Header'
 import Form from './Form'
 import Button from './Button'
 
-function StudentDetailsPanel({ onGenerateReport, loading, error }) {
-  const [formData, setFormData] = useState({
+const StudentDetailsPanel: React.FC<StudentDetailsPanelProps> = ({
+  onGenerateReport,
+  loading,
+  error
+}) => {
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     gender: '',
     positiveAttributes: []

@@ -1,17 +1,22 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
+import { FormData, FormChangeHandler } from '../../../types'
 import NameField from './NameField'
 import GenderField from './GenderField'
 import PositiveAttributesField from './PositiveAttributesField'
 
-function StudentForm({ onFormDataChange }) {
-  const [formData, setFormData] = useState({
+interface StudentFormProps {
+  onFormDataChange: FormChangeHandler
+}
+
+const StudentForm: React.FC<StudentFormProps> = ({ onFormDataChange }) => {
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     gender: '',
     positiveAttributes: []
   })
 
-  const updateFormData = (field, value) => {
-    const newFormData = { ...formData, [field]: value }
+  const updateFormData = (field: keyof FormData, value: string | string[]): void => {
+    const newFormData = { ...formData, [field]: value } as FormData
     setFormData(newFormData)
     if (onFormDataChange) {
       onFormDataChange(newFormData)
@@ -19,37 +24,37 @@ function StudentForm({ onFormDataChange }) {
   }
 
   return (
-    <div style={{ 
-      flex: 1, 
+    <div style={{
+      flex: 1,
       overflowY: 'auto',
       padding: '24px',
       backgroundColor: '#2a2a2a'
     }}>
-      <div style={{ 
-        display: 'flex', 
-        gap: '16px', 
+      <div style={{
+        display: 'flex',
+        gap: '16px',
         alignItems: 'flex-end',
         marginBottom: '24px'
       }}>
-        <NameField 
+        <NameField
           value={formData.name}
           onChange={(value) => updateFormData('name', value)}
         />
-        <GenderField 
+        <GenderField
           value={formData.gender}
           onChange={(value) => updateFormData('gender', value)}
         />
       </div>
-      
-      <PositiveAttributesField 
-        selectedAttributes={formData.positiveAttributes}
+
+      <PositiveAttributesField
+        value={formData.positiveAttributes}
         onChange={(value) => updateFormData('positiveAttributes', value)}
       />
-      
+
       {/* Placeholder for additional form fields */}
-      <div style={{ 
-        height: '400px', 
-        backgroundColor: '#3a3a3a', 
+      <div style={{
+        height: '400px',
+        backgroundColor: '#3a3a3a',
         border: '2px dashed #404040',
         borderRadius: '8px',
         display: 'flex',

@@ -1,7 +1,9 @@
-function StudentDetailsHeader() {
+import React from 'react'
+
+const StudentDetailsHeader: React.FC = () => {
   return (
-    <div style={{ 
-      padding: '16px 24px', 
+    <div style={{
+      padding: '16px 24px',
       borderBottom: '1px solid #404040',
       backgroundColor: '#2a2a2a',
       flexShrink: 0

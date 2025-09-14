@@ -1,22 +1,27 @@
-function GenderField({ value, onChange }) {
+import React from 'react'
+import { FormFieldProps } from '../../../types'
+
+const NameField: React.FC<FormFieldProps> = ({ value, onChange }) => {
   return (
-    <div style={{ width: '120px', flexShrink: 0 }}>
-      <label 
-        htmlFor="student-gender" 
-        style={{ 
+    <div style={{ flex: 1, minWidth: '200px' }}>
+      <label
+        htmlFor="student-name"
+        style={{
           display: 'block',
-          fontSize: '12px', 
-          fontWeight: '500', 
+          fontSize: '12px',
+          fontWeight: '500',
           color: '#ffffff',
           marginBottom: '6px'
         }}
       >
-        Gender
+        Student Name
       </label>
-      <select
-        id="student-gender"
+      <input
+        id="student-name"
+        type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        placeholder="Enter student's full name"
         style={{
           width: '100%',
           padding: '10px 12px',
@@ -27,7 +32,6 @@ function GenderField({ value, onChange }) {
           fontSize: '14px',
           outline: 'none',
           boxSizing: 'border-box',
-          cursor: 'pointer',
           transition: 'border-color 0.2s ease'
         }}
         onFocus={(e) => {
@@ -36,19 +40,9 @@ function GenderField({ value, onChange }) {
         onBlur={(e) => {
           e.target.style.borderColor = '#404040'
         }}
-      >
-        <option value="" style={{ backgroundColor: '#3a3a3a', color: '#a0a0a0' }}>
-          Select
-        </option>
-        <option value="Male" style={{ backgroundColor: '#3a3a3a', color: '#ffffff' }}>
-          Male
-        </option>
-        <option value="Female" style={{ backgroundColor: '#3a3a3a', color: '#ffffff' }}>
-          Female
-        </option>
-      </select>
+      />
     </div>
   )
 }
 
-export default GenderField
+export default NameField

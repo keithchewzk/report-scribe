@@ -1,10 +1,16 @@
-import { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import { MultiSelectFieldProps } from '../../../types'
 
-function PositiveAttributesField({ selectedAttributes, onChange }) {
+interface PositiveAttributesFieldProps extends MultiSelectFieldProps {
+  value: string[]
+  onChange: (value: string[]) => void
+}
+
+const PositiveAttributesField: React.FC<PositiveAttributesFieldProps> = ({ value: selectedAttributes, onChange }) => {
   const predefinedAttributes = [
     "Shows enthusiasm for learning",
     "Demonstrates strong leadership skills",
-    "Displays initiative in projects", 
+    "Displays initiative in projects",
     "Exhibits excellent teamwork",
     "Shows creativity in problem-solving",
     "Demonstrates responsibility and reliability",
@@ -14,18 +20,18 @@ function PositiveAttributesField({ selectedAttributes, onChange }) {
     "Demonstrates perseverance through challenges"
   ]
 
-  const [availableAttributes, setAvailableAttributes] = useState(predefinedAttributes)
-  const [customInput, setCustomInput] = useState('')
+  const [availableAttributes, setAvailableAttributes] = useState<string[]>(predefinedAttributes)
+  const [customInput, setCustomInput] = useState<string>('')
 
-  const toggleAttribute = (attribute) => {
-    const newSelected = selectedAttributes.includes(attribute) 
+  const toggleAttribute = (attribute: string): void => {
+    const newSelected = selectedAttributes.includes(attribute)
       ? selectedAttributes.filter(attr => attr !== attribute)
       : [...selectedAttributes, attribute]
-    
+
     onChange(newSelected)
   }
 
-  const addCustomAttribute = () => {
+  const addCustomAttribute = (): void => {
     const trimmedInput = customInput.trim()
     if (trimmedInput && !availableAttributes.includes(trimmedInput)) {
       setAvailableAttributes(prev => [...prev, trimmedInput])
@@ -35,7 +41,7 @@ function PositiveAttributesField({ selectedAttributes, onChange }) {
     }
   }
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === 'Enter') {
       addCustomAttribute()
     }
@@ -43,18 +49,18 @@ function PositiveAttributesField({ selectedAttributes, onChange }) {
 
   return (
     <div style={{ marginBottom: '24px' }}>
-      <label 
-        style={{ 
+      <label
+        style={{
           display: 'block',
-          fontSize: '12px', 
-          fontWeight: '500', 
+          fontSize: '12px',
+          fontWeight: '500',
           color: '#ffffff',
           marginBottom: '6px'
         }}
       >
         Positive Attributes
       </label>
-      
+
       <div style={{
         backgroundColor: '#3a3a3a',
         border: '1px solid #404040',
@@ -89,12 +95,12 @@ function PositiveAttributesField({ selectedAttributes, onChange }) {
                 }}
                 onMouseEnter={(e) => {
                   if (!isSelected) {
-                    e.currentTarget.style.backgroundColor = '#404040'
+                    (e.currentTarget as HTMLDivElement).style.backgroundColor = '#404040'
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isSelected) {
-                    e.currentTarget.style.backgroundColor = 'transparent'
+                    (e.currentTarget as HTMLDivElement).style.backgroundColor = 'transparent'
                   }
                 }}
               >
@@ -111,10 +117,10 @@ function PositiveAttributesField({ selectedAttributes, onChange }) {
                   borderColor: isSelected ? '#4a5568' : '#404040'
                 }}>
                   {isSelected && (
-                    <span style={{ 
-                      color: '#ffffff', 
-                      fontSize: '12px', 
-                      fontWeight: 'bold' 
+                    <span style={{
+                      color: '#ffffff',
+                      fontSize: '12px',
+                      fontWeight: 'bold'
                     }}>
                       ✓
                     </span>
@@ -153,10 +159,10 @@ function PositiveAttributesField({ selectedAttributes, onChange }) {
               boxSizing: 'border-box'
             }}
             onFocus={(e) => {
-              e.target.style.borderColor = '#555555'
+              (e.target as HTMLInputElement).style.borderColor = '#555555'
             }}
             onBlur={(e) => {
-              e.target.style.borderColor = '#404040'
+              (e.target as HTMLInputElement).style.borderColor = '#404040'
             }}
           />
           <button
@@ -175,12 +181,12 @@ function PositiveAttributesField({ selectedAttributes, onChange }) {
             }}
             onMouseEnter={(e) => {
               if (customInput.trim()) {
-                e.target.style.backgroundColor = '#5a6578'
+                (e.target as HTMLButtonElement).style.backgroundColor = '#5a6578'
               }
             }}
             onMouseLeave={(e) => {
               if (customInput.trim()) {
-                e.target.style.backgroundColor = '#4a5568'
+                (e.target as HTMLButtonElement).style.backgroundColor = '#4a5568'
               }
             }}
           >

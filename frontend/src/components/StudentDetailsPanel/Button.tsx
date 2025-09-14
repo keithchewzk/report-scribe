@@ -1,20 +1,28 @@
-function GenerateReportButton({ formData, onGenerateReport, loading, error }) {
-  const isFormValid = () => {
+import React from 'react'
+import { GenerateReportButtonProps } from '../../types'
+
+const GenerateReportButton: React.FC<GenerateReportButtonProps> = ({
+  formData,
+  onGenerateReport,
+  loading,
+  error
+}) => {
+  const isFormValid = (): boolean => {
     return (
       formData.name.trim() !== '' &&
       formData.gender !== ''
     )
   }
 
-  const handleGenerateReport = () => {
+  const handleGenerateReport = (): void => {
     if (isFormValid()) {
       onGenerateReport(formData)
     }
   }
 
   return (
-    <div style={{ 
-      padding: '16px 24px', 
+    <div style={{
+      padding: '16px 24px',
       borderTop: '1px solid #404040',
       backgroundColor: '#2a2a2a',
       flexShrink: 0
@@ -40,12 +48,12 @@ function GenerateReportButton({ formData, onGenerateReport, loading, error }) {
         }}
         onMouseEnter={(e) => {
           if (isFormValid() && !loading) {
-            e.target.style.backgroundColor = '#5a6578'
+            (e.target as HTMLButtonElement).style.backgroundColor = '#5a6578'
           }
         }}
         onMouseLeave={(e) => {
           if (isFormValid() && !loading) {
-            e.target.style.backgroundColor = '#4a5568'
+            (e.target as HTMLButtonElement).style.backgroundColor = '#4a5568'
           }
         }}
       >
@@ -68,7 +76,7 @@ function GenerateReportButton({ formData, onGenerateReport, loading, error }) {
           </>
         )}
       </button>
-      
+
       {error && (
         <div style={{
           marginTop: '8px',
