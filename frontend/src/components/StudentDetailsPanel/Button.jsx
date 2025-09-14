@@ -1,9 +1,4 @@
-import { useState } from 'react'
-
-function GenerateReportButton({ formData }) {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-
+function GenerateReportButton({ formData, onGenerateReport, loading, error }) {
   const isFormValid = () => {
     return (
       formData.name.trim() !== '' &&
@@ -11,44 +6,9 @@ function GenerateReportButton({ formData }) {
     )
   }
 
-  const handleGenerateReport = async () => {
-    if (!isFormValid()) {
-      setError('Please fill in all required fields')
-      return
-    }
-
-    setLoading(true)
-    setError('')
-
-    try {
-      const payload = {
-        name: formData.name.trim(),
-        gender: formData.gender,
-        positive_attributes: formData.positiveAttributes
-      }
-
-      const response = await fetch('/report/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      })
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-
-      const result = await response.json()
-      console.log('Report generated:', result)
-      
-      // TODO: Handle successful response (e.g., pass to parent component)
-      
-    } catch (error) {
-      console.error('Failed to generate report:', error)
-      setError('Failed to generate report. Please try again.')
-    } finally {
-      setLoading(false)
+  const handleGenerateReport = () => {
+    if (isFormValid()) {
+      onGenerateReport(formData)
     }
   }
 

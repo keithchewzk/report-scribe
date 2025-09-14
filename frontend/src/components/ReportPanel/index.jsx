@@ -1,15 +1,15 @@
 import Report from './Report'
 import Refinement from './Refinement'
 
-function ReportPanel() {
+function ReportPanel({ reportData }) {
   return (
-    <div style={{ 
-      width: '50%', 
+    <div style={{
+      width: '50%',
       display: 'flex',
       flexDirection: 'column',
       backgroundColor: '#1e1e1e'
     }}>
-      <Report />
+      <Report reportData={reportData} />
       <Refinement />
     </div>
   )

@@ -1,8 +1,11 @@
 import './App.css'
 import StudentDetailsPanel from './components/StudentDetailsPanel'
 import ReportPanel from './components/ReportPanel'
+import { useReport } from './hooks/useReport'
 
 function App() {
+  const { reportData, loading, error, generateReport } = useReport()
+
   return (
     <div style={{ 
       height: '100vh',
@@ -30,10 +33,14 @@ function App() {
       <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
         
         {/* Left Panel - Student Input */}
-        <StudentDetailsPanel />
+        <StudentDetailsPanel
+          onGenerateReport={generateReport}
+          loading={loading}
+          error={error}
+        />
 
         {/* Right Panel - Report Display & Refinement */}
-        <ReportPanel />
+        <ReportPanel reportData={reportData} />
       </div>
     </div>
   )

@@ -1,7 +1,7 @@
-function Report() {
+function Report({ reportData }) {
   return (
-    <div style={{ 
-      padding: '16px 24px', 
+    <div style={{
+      padding: '16px 24px',
       borderBottom: '1px solid #404040',
       backgroundColor: '#2a2a2a',
       flexShrink: 0
@@ -12,21 +12,29 @@ function Report() {
       <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: '#a0a0a0' }}>
         Review and refine your student report
       </p>
-      
+
       {/* Report Display Content */}
-      <div style={{ 
+      <div style={{
         marginTop: '16px',
-        height: '400px', 
-        backgroundColor: '#3a3a3a', 
-        border: '2px dashed #404040',
+        height: '400px',
+        backgroundColor: '#3a3a3a',
+        border: reportData ? '1px solid #404040' : '2px dashed #404040',
         borderRadius: '8px',
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '16px',
-        color: '#a0a0a0'
+        alignItems: reportData ? 'flex-start' : 'center',
+        justifyContent: reportData ? 'flex-start' : 'center',
+        fontSize: '14px',
+        color: reportData ? '#ffffff' : '#a0a0a0',
+        padding: reportData ? '16px' : '0',
+        overflow: 'auto'
       }}>
-        Generated Report Display Will Go Here
+        {reportData ? (
+          <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>
+            {reportData.content}
+          </div>
+        ) : (
+          'Generated Report Display Will Go Here'
+        )}
       </div>
     </div>
   )

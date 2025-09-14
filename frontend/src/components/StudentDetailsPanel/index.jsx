@@ -3,7 +3,7 @@ import Header from './Header'
 import Form from './Form'
 import Button from './Button'
 
-function StudentDetailsPanel() {
+function StudentDetailsPanel({ onGenerateReport, loading, error }) {
   const [formData, setFormData] = useState({
     name: '',
     gender: '',
@@ -11,8 +11,8 @@ function StudentDetailsPanel() {
   })
 
   return (
-    <div style={{ 
-      width: '50%', 
+    <div style={{
+      width: '50%',
       borderRight: '1px solid #404040',
       display: 'flex',
       flexDirection: 'column',
@@ -20,7 +20,12 @@ function StudentDetailsPanel() {
     }}>
       <Header />
       <Form onFormDataChange={setFormData} />
-      <Button formData={formData} />
+      <Button
+        formData={formData}
+        onGenerateReport={onGenerateReport}
+        loading={loading}
+        error={error}
+      />
     </div>
   )
 }
