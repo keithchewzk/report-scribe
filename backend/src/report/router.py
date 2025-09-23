@@ -19,7 +19,8 @@ async def generate_report(
     try:
         logger.info(f"Generating report for student: {request.name}")
 
-        report_content = report_service.generate_mock_report(request)
+        # Use AI report generation instead of mock
+        report_content = await report_service.generate_ai_report(request)
 
         logger.info(f"Successfully generated report for {request.name}")
 

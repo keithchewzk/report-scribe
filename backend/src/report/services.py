@@ -1,4 +1,6 @@
+import httpx
 from src.report.schemas import ReportRequest
+from src.settings import settings
 
 
 class ReportService:
@@ -39,3 +41,121 @@ class ReportService:
         report += f"With continued effort and focus, {pronoun} will achieve even greater success in {possessive} academic journey."
 
         return report
+
+    async def generate_ai_report(self, request: ReportRequest) -> str:
+        """Generate a student report using Google Gemini 2.0 Flash API"""
+
+        if not settings.gemini_api_key:
+            raise ValueError("GEMINI_API_KEY not configured")
+
+        # Craft the prompt for professional student report generation
+        prompt = self._build_report_prompt(request)
+
+        # Gemini 2.0 Flash API endpoint
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key={settings.gemini_api_key}"
+
+        # Request payload structure for Gemini API
+        payload = {
+            "contents": [
+                {
+                    "parts": [
+                        {
+                            "text": prompt
+                        }
+                    ]
+                }
+            ],
+            "generationConfig": {
+                "temperature": 0.7,
+                "topP": 0.8,
+                "topK": 40,
+                "maxOutputTokens": 1000,
+                "responseMimeType": "text/plain"
+            },
+            "safetySettings": [
+                {
+                    "category": "HARM_CATEGORY_HARASSMENT",
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                },
+                {
+                    "category": "HARM_CATEGORY_HATE_SPEECH",
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                },
+                {
+                    "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                },
+                {
+                    "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                }
+            ]
+        }
+
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.post(
+                    url,
+                    json=payload,
+                    headers={"Content-Type": "application/json"}
+                )
+
+                if response.status_code != 200:
+                    raise httpx.HTTPStatusError(
+                        f"Gemini API returned {response.status_code}: {response.text}",
+                        request=response.request,
+                        response=response
+                    )
+
+                result = response.json()
+
+                # Extract the generated text from Gemini's response structure
+                if "candidates" in result and len(result["candidates"]) > 0:
+                    candidate = result["candidates"][0]
+                    if "content" in candidate and "parts" in candidate["content"]:
+                        parts = candidate["content"]["parts"]
+                        if len(parts) > 0 and "text" in parts[0]:
+                            return parts[0]["text"].strip()
+
+                raise ValueError("Unexpected response format from Gemini API")
+
+        except httpx.TimeoutException:
+            raise Exception("Gemini API request timed out")
+        except httpx.HTTPStatusError as e:
+            raise Exception(f"Gemini API HTTP error: {e}")
+        except Exception as e:
+            raise Exception(f"Failed to generate AI report: {str(e)}")
+
+    def _build_report_prompt(self, request: ReportRequest) -> str:
+        """Build a structured prompt for Gemini to generate professional student reports"""
+
+        # Determine pronouns
+        pronoun = "he" if request.gender == "Male" else "she"
+        possessive = "his" if request.gender == "Male" else "her"
+
+        # Build attributes list
+        attributes_text = ""
+        if request.positive_attributes:
+            attributes_text = f"Positive attributes observed: {', '.join(request.positive_attributes)}"
+
+        prompt = f"""You are an experienced school teacher writing a professional student report for parent communication.
+
+Student Information:
+- Name: {request.name}
+- Gender: {request.gender} (use {pronoun}/{possessive} pronouns)
+{attributes_text}
+
+Please write a professional, positive, and constructive student report following these guidelines:
+
+1. Start with "Student Report for {request.name}"
+2. Use formal but warm educational language
+3. Incorporate the positive attributes naturally into meaningful sentences
+4. Use proper pronouns ({pronoun}/{possessive}) throughout
+5. Include 2-3 paragraphs covering the student's strengths and overall progress
+6. End with encouragement for continued growth
+7. Keep the tone professional yet supportive
+8. Length: 150-300 words
+
+The report should sound like it was written by a caring teacher who knows the student well."""
+
+        return prompt

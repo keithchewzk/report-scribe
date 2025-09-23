@@ -34,6 +34,7 @@ services:
       - HOT_RELOAD=${HOT_RELOAD:-0}
     volumes:
       - ./backend/src:/app/src${HOT_RELOAD:+:cached}
+      - ./backend/.env:/app/.env:ro
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 30s
