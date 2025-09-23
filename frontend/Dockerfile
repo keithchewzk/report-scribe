@@ -1,4 +1,4 @@
-FROM node:20-alpine AS builder
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -8,33 +8,11 @@ RUN npm ci
 
 COPY . .
 
-RUN npm run build
+EXPOSE 5173
 
-FROM nginx:alpine
-
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-RUN echo 'server { \
-    listen 80; \
-    server_name localhost; \
-    location / { \
-        root /usr/share/nginx/html; \
-        index index.html; \
-        try_files $uri $uri/ /index.html; \
-    } \
-    # Report API proxy to backend \
-    location /report/ { \
-        proxy_pass http://host.docker.internal:8000/report/; \
-        proxy_set_header Host $host; \
-        proxy_set_header X-Real-IP $remote_addr; \
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; \
-        proxy_set_header X-Forwarded-Proto $scheme; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-
+# Health check for dev mode
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost/ || exit 1
+    CMD if [ "$HOT_RELOAD" = "1" ]; then curl -f http://localhost:5173/ || exit 1; else curl -f http://localhost:80/ || exit 1; fi
 
-CMD ["nginx", "-g", "daemon off;"]
+# Development mode: run Vite dev server, Production mode: build and serve with nginx
+CMD ["sh", "-c", "if [ \"$HOT_RELOAD\" = '1' ]; then npm run dev -- --host 0.0.0.0; else npm run build && npx serve -s dist -l 80; fi"]
