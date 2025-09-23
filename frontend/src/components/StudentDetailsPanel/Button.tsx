@@ -16,7 +16,13 @@ const GenerateReportButton: React.FC<GenerateReportButtonProps> = ({
 
   const handleGenerateReport = (): void => {
     if (isFormValid()) {
-      onGenerateReport(formData)
+      // Transform FormData to GenerateReportRequest format
+      const apiPayload = {
+        name: formData.name,
+        gender: formData.gender,
+        positive_attributes: formData.positiveAttributes
+      }
+      onGenerateReport(apiPayload)
     }
   }
 

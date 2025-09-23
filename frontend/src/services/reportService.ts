@@ -10,27 +10,19 @@ export interface GenerateReportRequest {
 }
 
 export interface GenerateReportResponse {
-  content: string
+  success: boolean
+  report: string
+  message: string
 }
 
 export const generateReport = async (formData: GenerateReportRequest): Promise<GenerateReportResponse> => {
-  // Mock API response - comment out when ready to use real backend
-  await new Promise(resolve => setTimeout(resolve, 1500)) // Simulate network delay
-
-  const result: GenerateReportResponse = {
-    content: `This report is for ${formData.name.trim()}`
-  }
-
-  return result
-
-  /* Real API call - uncomment when backend is ready
   const payload: GenerateReportRequest = {
     name: formData.name.trim(),
     gender: formData.gender,
     positive_attributes: formData.positive_attributes
   }
 
-  const response = await fetch('/report/generate', {
+  const response = await fetch('http://localhost:8000/report/generate', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -44,5 +36,4 @@ export const generateReport = async (formData: GenerateReportRequest): Promise<G
 
   const result: GenerateReportResponse = await response.json()
   return result
-  */
 }

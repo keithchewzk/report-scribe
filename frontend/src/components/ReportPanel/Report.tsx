@@ -33,7 +33,7 @@ const Report: React.FC<ReportDisplayProps> = ({ reportData }) => {
       }}>
         {reportData ? (
           <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>
-            {reportData.content}
+            {reportData.report}
           </div>
         ) : (
           'Generated Report Display Will Go Here'
