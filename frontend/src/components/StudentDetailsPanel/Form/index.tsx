@@ -4,6 +4,7 @@ import NameField from './NameField'
 import GenderField from './GenderField'
 import PositiveAttributesField from './PositiveAttributesField'
 import NegativeAttributesField from './NegativeAttributesField'
+import InstructionsField from './InstructionsField'
 
 interface StudentFormProps {
   onFormDataChange: FormChangeHandler
@@ -14,7 +15,8 @@ const StudentForm: React.FC<StudentFormProps> = ({ onFormDataChange }) => {
     name: '',
     gender: '',
     positiveAttributes: [],
-    negativeAttributes: []
+    negativeAttributes: [],
+    instructions: ''
   })
 
   const updateFormData = (field: keyof FormData, value: string | string[]): void => {
@@ -56,6 +58,11 @@ const StudentForm: React.FC<StudentFormProps> = ({ onFormDataChange }) => {
       <NegativeAttributesField
         value={formData.negativeAttributes}
         onChange={(value) => updateFormData('negativeAttributes', value)}
+      />
+
+      <InstructionsField
+        value={formData.instructions}
+        onChange={(value) => updateFormData('instructions', value)}
       />
     </div>
   )

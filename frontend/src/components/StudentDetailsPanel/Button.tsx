@@ -21,7 +21,8 @@ const GenerateReportButton: React.FC<GenerateReportButtonProps> = ({
         name: formData.name,
         gender: formData.gender as 'Male' | 'Female',
         positive_attributes: formData.positiveAttributes,
-        negative_attributes: formData.negativeAttributes
+        negative_attributes: formData.negativeAttributes,
+        instructions: formData.instructions
       }
       onGenerateReport(apiPayload)
     }

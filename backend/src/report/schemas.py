@@ -14,6 +14,9 @@ class ReportRequest(BaseModel):
     negative_attributes: list[str] = Field(
         default_factory=list, description="List of areas for improvement for the student"
     )
+    instructions: str = Field(
+        default="", description="Additional instructions for report generation"
+    )
 
 
 class ReportResponse(BaseModel):

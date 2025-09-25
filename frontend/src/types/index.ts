@@ -10,6 +10,7 @@ export interface FormData {
   gender: '' | 'Male' | 'Female'
   positiveAttributes: string[]
   negativeAttributes: string[]
+  instructions: string
 }
 
 // Component Prop Types

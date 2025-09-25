@@ -8,6 +8,7 @@ export interface GenerateReportRequest {
   gender: 'Male' | 'Female'
   positive_attributes: string[]
   negative_attributes: string[]
+  instructions: string
 }
 
 export interface GenerateReportResponse {
@@ -21,7 +22,8 @@ export const generateReport = async (formData: GenerateReportRequest): Promise<G
     name: formData.name.trim(),
     gender: formData.gender,
     positive_attributes: formData.positive_attributes,
-    negative_attributes: formData.negative_attributes
+    negative_attributes: formData.negative_attributes,
+    instructions: formData.instructions
   }
 
   const response = await fetch('http://localhost:8000/report/generate', {
