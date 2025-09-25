@@ -56,10 +56,10 @@ Frontend (Display/Refinement)
 - Type safety with strict validation rules
 
 **5. Report Generation Logic**
-- Mock report generator with intelligent text composition
-- Dynamic pronoun handling (he/she, his/her)
-- Contextual attribute integration
-- Simplified validation (relies on Pydantic)
+- AI-powered report generation with real LLM API calls
+- Contextual prompt engineering for professional student reports
+- Dynamic content generation based on student attributes
+- Robust error handling for API integration
 
 ## Project Structure
 
@@ -156,33 +156,25 @@ class ReportResponse(BaseModel):
 
 ## Report Generation Logic
 
-### Mock Report Structure
-1. **Header**: "Student Report for {name}"
-2. **Positive Attributes Section**: Contextual integration of attributes
-3. **Conclusion**: Professional closing with encouragement
+### AI-Powered Report Generation
+1. **Prompt Engineering**: Structured prompts for consistent, professional reports
+2. **Context Integration**: Student name, gender, and attributes seamlessly incorporated
+3. **Professional Tone**: Educational language appropriate for parent communication
+4. **Personalization**: Each report tailored to individual student characteristics
 
-### Intelligent Text Composition
-- **Pronoun Handling**: Automatic he/she, his/her selection based on gender
-- **Attribute Integration**: Smart grouping and sentence construction
-- **Dynamic Content**: Different patterns based on number of attributes
-- **Professional Tone**: Maintains formal educational language
+### LLM Integration Features
+- **Real-time Generation**: Live API calls to generate unique reports
+- **Contextual Awareness**: Proper pronoun usage and attribute integration
+- **Quality Consistency**: Maintains professional educational standards
+- **Error Resilience**: Robust handling of API failures and timeouts
 
-### Example Generation Logic
+### Report Generation Process
 ```python
-def generate_mock_report(request: ReportRequest) -> str:
-    pronoun = "he" if request.gender == "Male" else "she"
-    possessive = "his" if request.gender == "Male" else "her"
-    
-    # Build report sections dynamically
-    report = f"Student Report for {request.name}\n\n"
-    
-    # Process attributes with intelligent grouping
-    if len(request.positive_attributes) >= 3:
-        first_three = request.positive_attributes[:3]
-        report += f"Particularly noteworthy is how {pronoun} {', '.join(first_three).lower()}."
-    
-    # Add professional conclusion
-    report += f"\n\nOverall, {request.name} is a valued member of our classroom community..."
+# Actual LLM integration replaces mock generation
+# - Structured prompts with student context
+# - API calls to language model service
+# - Professional formatting and tone
+# - Error handling for API reliability
 ```
 
 ## CORS Configuration
@@ -281,7 +273,7 @@ python-multipart==0.0.6   # Form data support
 # Health check
 curl http://localhost:8000/health
 
-# Report generation
+# Report generation (now with real LLM calls)
 curl -X POST "http://localhost:8000/report/generate" \
   -H "Content-Type: application/json" \
   -d '{"name": "Test Student", "gender": "Male", "positive_attributes": ["Shows enthusiasm"]}'
@@ -295,7 +287,7 @@ curl -X POST "http://localhost:8000/report/generate" \
 ## Future Enhancements
 
 ### Planned Features
-- **AI Integration**: OpenAI/Anthropic API integration for real report generation
+- **Enhanced AI Features**: Advanced prompt templates and fine-tuning options
 - **Database Support**: Persistent storage for reports and user data
 - **Authentication**: User login and session management
 - **Template System**: Customizable report templates

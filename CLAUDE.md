@@ -56,7 +56,7 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 - Modular architecture with domain-separated routers (general + report modules)
 - `/health` endpoint for monitoring
 - `/report/generate` endpoint for report generation (moved to report module)
-- Mock report generator with pronoun handling
+- AI integration with real LLM calls for report generation
 - CORS configuration for frontend integration
 - Docker containerization with optimized src/ directory structure
 - Virtual environment setup with requirements.txt
@@ -65,7 +65,6 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 - Areas for Improvement multi-select field
 - Additional Information textarea
 - Report display and refinement interface
-- AI integration (OpenAI/Anthropic) for real report generation
 
 ## Technical Architecture
 
