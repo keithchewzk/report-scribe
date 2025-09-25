@@ -9,6 +9,7 @@ export interface FormData {
   name: string
   gender: '' | 'Male' | 'Female'
   positiveAttributes: string[]
+  negativeAttributes: string[]
 }
 
 // Component Prop Types

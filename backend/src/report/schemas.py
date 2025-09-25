@@ -9,7 +9,10 @@ class ReportRequest(BaseModel):
         ..., description="Student's gender for pronoun context"
     )
     positive_attributes: list[str] = Field(
-        ..., description="List of positive attributes for the student"
+        default_factory=list, description="List of positive attributes for the student"
+    )
+    negative_attributes: list[str] = Field(
+        default_factory=list, description="List of areas for improvement for the student"
     )
 
 

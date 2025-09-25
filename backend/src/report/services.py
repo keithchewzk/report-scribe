@@ -136,7 +136,9 @@ class ReportService:
         # Build attributes list
         attributes_text = ""
         if request.positive_attributes:
-            attributes_text = f"Positive attributes observed: {', '.join(request.positive_attributes)}"
+            attributes_text += f"Positive attributes observed: {', '.join(request.positive_attributes)}\n"
+        if request.negative_attributes:
+            attributes_text += f"Areas for improvement: {', '.join(request.negative_attributes)}"
 
         prompt = f"""You are an experienced school teacher writing a professional student report for parent communication.
 
@@ -150,12 +152,14 @@ Please write a professional, positive, and constructive student report following
 1. Start with "Student Report for {request.name}"
 2. Use formal but warm educational language
 3. Incorporate the positive attributes naturally into meaningful sentences
-4. Use proper pronouns ({pronoun}/{possessive}) throughout
-5. Include 2-3 paragraphs covering the student's strengths and overall progress
-6. End with encouragement for continued growth
-7. Keep the tone professional yet supportive
-8. Length: 150-300 words
+4. Address areas for improvement constructively and professionally
+5. Use proper pronouns ({pronoun}/{possessive}) throughout
+6. Include 2-3 paragraphs covering strengths, areas for growth, and overall progress
+7. Balance positive feedback with constructive suggestions for improvement
+8. End with encouragement and specific next steps for continued growth
+9. Keep the tone professional yet supportive - suitable for parent communication
+10. Length: 200-400 words
 
-The report should sound like it was written by a caring teacher who knows the student well."""
+The report should sound like it was written by a caring teacher who knows the student well and wants to support their continued development."""
 
         return prompt
