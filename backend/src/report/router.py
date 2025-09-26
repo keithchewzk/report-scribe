@@ -2,7 +2,7 @@ import logging
 
 from fastapi import APIRouter, Depends, HTTPException
 from src.report.dependencies import get_report_service
-from src.report.schemas import ReportRequest, ReportResponse
+from src.report.schemas import GenerateReportRequest, Report, RefineReportRequest
 from src.report.services import ReportService
 
 logger = logging.getLogger(__name__)
@@ -10,9 +10,9 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-@router.post("/generate", response_model=ReportResponse)
+@router.post("/generate", response_model=Report)
 async def generate_report(
-    request: ReportRequest, report_service: ReportService = Depends(get_report_service)
+    request: GenerateReportRequest, report_service: ReportService = Depends(get_report_service)
 ):
     """Generate a student report based on provided information"""
 
@@ -24,7 +24,7 @@ async def generate_report(
 
         logger.info(f"Successfully generated report for {request.name}")
 
-        return ReportResponse(
+        return Report(
             success=True, report=report_content, message="Report generated successfully"
         )
 
@@ -33,4 +33,30 @@ async def generate_report(
         raise HTTPException(
             status_code=500,
             detail="Internal server error occurred while generating report",
+        )
+
+
+@router.post("/refine", response_model=Report)
+async def refine_report(
+    request: RefineReportRequest, report_service: ReportService = Depends(get_report_service)
+):
+    """Refine an existing student report based on specific instructions"""
+
+    try:
+        logger.info(f"Refining report with instructions: {request.refinement_instructions[:50]}...")
+
+        # Use AI report refinement
+        refined_content = await report_service.refine_ai_report(request)
+
+        logger.info("Successfully refined report")
+
+        return Report(
+            success=True, report=refined_content, message="Report refined successfully"
+        )
+
+    except Exception as e:
+        logger.error(f"Error refining report: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail="Internal server error occurred while refining report",
         )

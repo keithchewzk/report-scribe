@@ -18,7 +18,7 @@ export interface GenerateReportResponse {
 }
 
 export interface RefineReportRequest {
-  refinement_text: string
+  refinement_instructions: string
   current_report: string
 }
 
@@ -55,7 +55,7 @@ export const generateReport = async (formData: GenerateReportRequest): Promise<G
 
 export const refineReport = async (refinementData: RefineReportRequest): Promise<RefineReportResponse> => {
   const payload: RefineReportRequest = {
-    refinement_text: refinementData.refinement_text.trim(),
+    refinement_instructions: refinementData.refinement_instructions.trim(),
     current_report: refinementData.current_report
   }
 

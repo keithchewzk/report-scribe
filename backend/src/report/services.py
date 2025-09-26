@@ -1,12 +1,12 @@
 import httpx
-from src.report.schemas import ReportRequest
+from src.report.schemas import GenerateReportRequest, RefineReportRequest
 from src.settings import settings
 
 
 class ReportService:
     """Service class for handling report generation logic"""
 
-    def generate_mock_report(self, request: ReportRequest) -> str:
+    def generate_mock_report(self, request: GenerateReportRequest) -> str:
         """Generate a mock student report based on the provided data"""
 
         # Determine pronouns based on gender
@@ -42,7 +42,7 @@ class ReportService:
 
         return report
 
-    async def generate_ai_report(self, request: ReportRequest) -> str:
+    async def generate_ai_report(self, request: GenerateReportRequest) -> str:
         """Generate a student report using Google Gemini 2.0 Flash API"""
 
         if not settings.gemini_api_key:
@@ -126,7 +126,7 @@ class ReportService:
         except Exception as e:
             raise Exception(f"Failed to generate AI report: {str(e)}")
 
-    def _build_report_prompt(self, request: ReportRequest) -> str:
+    def _build_report_prompt(self, request: GenerateReportRequest) -> str:
         """Build a structured prompt for Gemini to generate professional student reports"""
 
         # Determine pronouns
@@ -164,5 +164,117 @@ Please write a professional, positive, and constructive student report following
 11. Length: 200-400 words (unless specified otherwise in instructions)
 
 The report should sound like it was written by a caring teacher who knows the student well and wants to support their continued development."""
+
+        return prompt
+
+    async def refine_ai_report(self, request: RefineReportRequest) -> str:
+        """Refine an existing student report using Google Gemini 2.0 Flash API"""
+
+        if not settings.gemini_api_key:
+            raise ValueError("GEMINI_API_KEY not configured")
+
+        # Craft the prompt for report refinement
+        prompt = self._build_refinement_prompt(request)
+
+        # Gemini 2.0 Flash API endpoint
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key={settings.gemini_api_key}"
+
+        # Request payload structure for Gemini API
+        payload = {
+            "contents": [
+                {
+                    "parts": [
+                        {
+                            "text": prompt
+                        }
+                    ]
+                }
+            ],
+            "generationConfig": {
+                "temperature": 0.7,
+                "topP": 0.8,
+                "topK": 40,
+                "maxOutputTokens": 1000,
+                "responseMimeType": "text/plain"
+            },
+            "safetySettings": [
+                {
+                    "category": "HARM_CATEGORY_HARASSMENT",
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                },
+                {
+                    "category": "HARM_CATEGORY_HATE_SPEECH",
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                },
+                {
+                    "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                },
+                {
+                    "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                }
+            ]
+        }
+
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.post(
+                    url,
+                    json=payload,
+                    headers={"Content-Type": "application/json"}
+                )
+
+                if response.status_code != 200:
+                    raise httpx.HTTPStatusError(
+                        f"Gemini API returned {response.status_code}: {response.text}",
+                        request=response.request,
+                        response=response
+                    )
+
+                result = response.json()
+
+                # Extract the generated text from Gemini's response structure
+                if "candidates" in result and len(result["candidates"]) > 0:
+                    candidate = result["candidates"][0]
+                    if "content" in candidate and "parts" in candidate["content"]:
+                        parts = candidate["content"]["parts"]
+                        if len(parts) > 0 and "text" in parts[0]:
+                            return parts[0]["text"].strip()
+
+                raise ValueError("Unexpected response format from Gemini API")
+
+        except httpx.TimeoutException:
+            raise Exception("Gemini API request timed out")
+        except httpx.HTTPStatusError as e:
+            raise Exception(f"Gemini API HTTP error: {e}")
+        except Exception as e:
+            raise Exception(f"Failed to refine AI report: {str(e)}")
+
+    def _build_refinement_prompt(self, request: RefineReportRequest) -> str:
+        """Build a structured prompt for Gemini to refine existing student reports"""
+
+        prompt = f"""You are an experienced school teacher refining a student report based on specific feedback and instructions.
+
+ORIGINAL REPORT:
+{request.current_report}
+
+REFINEMENT INSTRUCTIONS:
+{request.refinement_instructions}
+
+Please refine the above student report according to the provided instructions. Follow these guidelines:
+
+1. Maintain the professional, educational tone suitable for parent communication
+2. Keep the same student name and basic structure unless specifically instructed otherwise
+3. Apply the refinement instructions while preserving the core positive message
+4. Ensure the refined report flows naturally and reads professionally
+5. Maintain appropriate length (200-400 words unless specified otherwise)
+6. Keep proper grammar, spelling, and formatting
+7. Preserve any positive achievements mentioned unless specifically asked to modify them
+8. If asked to shorten, prioritize the most important points
+9. If asked to expand, add relevant educational context and examples
+10. Always maintain a constructive and supportive tone
+
+Return only the refined report content, starting with "Student Report for [Student Name]" if that format was used originally."""
 
         return prompt

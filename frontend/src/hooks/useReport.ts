@@ -65,7 +65,7 @@ export const useReport = (): UseReportReturn => {
 
     try {
       const refinementData: RefineReportRequest = {
-        refinement_text: refinementText.trim(),
+        refinement_instructions: refinementText.trim(),
         current_report: currentReport
       }
 
