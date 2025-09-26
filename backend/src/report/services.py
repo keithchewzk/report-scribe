@@ -6,43 +6,7 @@ from src.settings import settings
 class ReportService:
     """Service class for handling report generation logic"""
 
-    def generate_mock_report(self, request: GenerateReportRequest) -> str:
-        """Generate a mock student report based on the provided data"""
-
-        # Determine pronouns based on gender
-        pronoun = "he" if request.gender == "Male" else "she"
-        possessive = "his" if request.gender == "Male" else "her"
-
-        # Start building the report
-        report = f"Student Report for {request.name}\n\n"
-
-        # Add positive attributes section
-        if request.positive_attributes:
-            report += f"{request.name} has demonstrated several commendable qualities this term. "
-
-            # Use first few attributes in a sentence
-            if len(request.positive_attributes) >= 3:
-                first_three = request.positive_attributes[:3]
-                report += f"Particularly noteworthy is how {pronoun} {', '.join(first_three).lower()}. "
-            elif len(request.positive_attributes) == 2:
-                report += f"Particularly noteworthy is how {pronoun} {' and '.join(request.positive_attributes).lower()}. "
-            else:
-                report += f"Particularly noteworthy is how {pronoun} {request.positive_attributes[0].lower()}. "
-
-            # Add remaining attributes if there are more
-            if len(request.positive_attributes) > 3:
-                remaining = request.positive_attributes[3:]
-                report += (
-                    f"Additionally, {request.name} {', '.join(remaining).lower()}. "
-                )
-
-        # Add a general conclusion
-        report += f"\n\nOverall, {request.name} is a valued member of our classroom community. "
-        report += f"With continued effort and focus, {pronoun} will achieve even greater success in {possessive} academic journey."
-
-        return report
-
-    async def generate_ai_report(self, request: GenerateReportRequest) -> str:
+    async def generate_report(self, request: GenerateReportRequest) -> str:
         """Generate a student report using Google Gemini 2.0 Flash API"""
 
         if not settings.gemini_api_key:
@@ -56,55 +20,45 @@ class ReportService:
 
         # Request payload structure for Gemini API
         payload = {
-            "contents": [
-                {
-                    "parts": [
-                        {
-                            "text": prompt
-                        }
-                    ]
-                }
-            ],
+            "contents": [{"parts": [{"text": prompt}]}],
             "generationConfig": {
                 "temperature": 0.7,
                 "topP": 0.8,
                 "topK": 40,
                 "maxOutputTokens": 1000,
-                "responseMimeType": "text/plain"
+                "responseMimeType": "text/plain",
             },
             "safetySettings": [
                 {
                     "category": "HARM_CATEGORY_HARASSMENT",
-                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE",
                 },
                 {
                     "category": "HARM_CATEGORY_HATE_SPEECH",
-                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE",
                 },
                 {
                     "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE",
                 },
                 {
                     "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
-                }
-            ]
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE",
+                },
+            ],
         }
 
         try:
             async with httpx.AsyncClient(timeout=30.0) as client:
                 response = await client.post(
-                    url,
-                    json=payload,
-                    headers={"Content-Type": "application/json"}
+                    url, json=payload, headers={"Content-Type": "application/json"}
                 )
 
                 if response.status_code != 200:
                     raise httpx.HTTPStatusError(
                         f"Gemini API returned {response.status_code}: {response.text}",
                         request=response.request,
-                        response=response
+                        response=response,
                     )
 
                 result = response.json()
@@ -138,9 +92,13 @@ class ReportService:
         if request.positive_attributes:
             attributes_text += f"Positive attributes observed: {', '.join(request.positive_attributes)}\n"
         if request.negative_attributes:
-            attributes_text += f"Areas for improvement: {', '.join(request.negative_attributes)}\n"
+            attributes_text += (
+                f"Areas for improvement: {', '.join(request.negative_attributes)}\n"
+            )
         if request.instructions.strip():
-            attributes_text += f"Additional instructions: {request.instructions.strip()}"
+            attributes_text += (
+                f"Additional instructions: {request.instructions.strip()}"
+            )
 
         prompt = f"""You are an experienced school teacher writing a professional student report for parent communication.
 
@@ -151,23 +109,22 @@ Student Information:
 
 Please write a professional, positive, and constructive student report following these guidelines:
 
-1. Start with "Student Report for {request.name}"
-2. Use formal but warm educational language
-3. Incorporate the positive attributes naturally into meaningful sentences
-4. Address areas for improvement constructively and professionally
-5. Use proper pronouns ({pronoun}/{possessive}) throughout
-6. Include 2-3 paragraphs covering strengths, areas for growth, and overall progress
-7. Balance positive feedback with constructive suggestions for improvement
-8. End with encouragement and specific next steps for continued growth
-9. Keep the tone professional yet supportive - suitable for parent communication
-10. Follow any additional instructions provided above (they take priority)
-11. Length: 200-400 words (unless specified otherwise in instructions)
+1. Use formal but warm educational language appropriate for parent communication
+2. Incorporate the positive attributes naturally into meaningful sentences
+3. Address areas for improvement constructively and professionally
+4. Use proper pronouns ({pronoun}/{possessive}) throughout
+5. Include 2-3 paragraphs covering strengths, areas for growth, and overall progress
+6. Balance positive feedback with constructive suggestions for improvement
+7. End with encouragement and specific next steps for continued growth
+8. Keep the tone professional yet supportive - suitable for parent communication
+9. Follow any additional instructions provided above (they take priority)
+10. Length: 200-400 words (unless specified otherwise in instructions)
 
 The report should sound like it was written by a caring teacher who knows the student well and wants to support their continued development."""
 
         return prompt
 
-    async def refine_ai_report(self, request: RefineReportRequest) -> str:
+    async def refine_report(self, request: RefineReportRequest) -> str:
         """Refine an existing student report using Google Gemini 2.0 Flash API"""
 
         if not settings.gemini_api_key:
@@ -181,55 +138,45 @@ The report should sound like it was written by a caring teacher who knows the st
 
         # Request payload structure for Gemini API
         payload = {
-            "contents": [
-                {
-                    "parts": [
-                        {
-                            "text": prompt
-                        }
-                    ]
-                }
-            ],
+            "contents": [{"parts": [{"text": prompt}]}],
             "generationConfig": {
                 "temperature": 0.7,
                 "topP": 0.8,
                 "topK": 40,
                 "maxOutputTokens": 1000,
-                "responseMimeType": "text/plain"
+                "responseMimeType": "text/plain",
             },
             "safetySettings": [
                 {
                     "category": "HARM_CATEGORY_HARASSMENT",
-                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE",
                 },
                 {
                     "category": "HARM_CATEGORY_HATE_SPEECH",
-                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE",
                 },
                 {
                     "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE",
                 },
                 {
                     "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
-                }
-            ]
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE",
+                },
+            ],
         }
 
         try:
             async with httpx.AsyncClient(timeout=30.0) as client:
                 response = await client.post(
-                    url,
-                    json=payload,
-                    headers={"Content-Type": "application/json"}
+                    url, json=payload, headers={"Content-Type": "application/json"}
                 )
 
                 if response.status_code != 200:
                     raise httpx.HTTPStatusError(
                         f"Gemini API returned {response.status_code}: {response.text}",
                         request=response.request,
-                        response=response
+                        response=response,
                     )
 
                 result = response.json()
@@ -275,6 +222,6 @@ Please refine the above student report according to the provided instructions. F
 9. If asked to expand, add relevant educational context and examples
 10. Always maintain a constructive and supportive tone
 
-Return only the refined report content, starting with "Student Report for [Student Name]" if that format was used originally."""
+Return only the refined report content without any additional formatting or prefixes."""
 
         return prompt
