@@ -4,22 +4,31 @@ import { ReportDisplayProps } from '../../types'
 const Report: React.FC<ReportDisplayProps> = ({ reportData }) => {
   return (
     <div style={{
-      padding: '16px 24px',
-      borderBottom: '1px solid #404040',
-      backgroundColor: '#2a2a2a',
-      flexShrink: 0
+      flex: '1 1 75%',
+      display: 'flex',
+      flexDirection: 'column',
+      backgroundColor: '#1e1e1e',
+      minHeight: 0
     }}>
-      <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '500', color: '#ffffff' }}>
-        Generated Report
-      </h2>
-      <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: '#a0a0a0' }}>
-        Review and refine your student report
-      </p>
+      {/* Header */}
+      <div style={{
+        padding: '16px 24px',
+        borderBottom: '1px solid #404040',
+        backgroundColor: '#2a2a2a',
+        flexShrink: 0
+      }}>
+        <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '500', color: '#ffffff' }}>
+          Generated Report
+        </h2>
+        <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: '#a0a0a0' }}>
+          Review and refine your student report
+        </p>
+      </div>
 
       {/* Report Display Content */}
       <div style={{
-        marginTop: '16px',
-        height: '400px',
+        flex: 1,
+        margin: '16px 24px',
         backgroundColor: '#3a3a3a',
         border: reportData ? '1px solid #404040' : '2px dashed #404040',
         borderRadius: '8px',
