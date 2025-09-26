@@ -5,7 +5,7 @@ import ReportPanel from './components/ReportPanel'
 import { useReport } from './hooks/useReport'
 
 const App: React.FC = () => {
-  const { reportData, loading, error, generateReport } = useReport()
+  const { reportData, loading, error, generateReport, refineReport } = useReport()
 
   return (
     <div style={{
@@ -41,7 +41,12 @@ const App: React.FC = () => {
         />
 
         {/* Right Panel - Report Display & Refinement */}
-        <ReportPanel reportData={reportData} />
+        <ReportPanel
+          reportData={reportData}
+          onRefineReport={refineReport}
+          loading={loading}
+          error={error}
+        />
       </div>
     </div>
   )

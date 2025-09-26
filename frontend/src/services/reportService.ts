@@ -17,6 +17,17 @@ export interface GenerateReportResponse {
   message: string
 }
 
+export interface RefineReportRequest {
+  refinement_text: string
+  current_report: string
+}
+
+export interface RefineReportResponse {
+  success: boolean
+  report: string
+  message: string
+}
+
 export const generateReport = async (formData: GenerateReportRequest): Promise<GenerateReportResponse> => {
   const payload: GenerateReportRequest = {
     name: formData.name.trim(),
@@ -39,5 +50,27 @@ export const generateReport = async (formData: GenerateReportRequest): Promise<G
   }
 
   const result: GenerateReportResponse = await response.json()
+  return result
+}
+
+export const refineReport = async (refinementData: RefineReportRequest): Promise<RefineReportResponse> => {
+  const payload: RefineReportRequest = {
+    refinement_text: refinementData.refinement_text.trim(),
+    current_report: refinementData.current_report
+  }
+
+  const response = await fetch('http://localhost:8000/report/refine', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  })
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`)
+  }
+
+  const result: RefineReportResponse = await response.json()
   return result
 }

@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import {
   generateReport as generateReportService,
+  refineReport as refineReportService,
   GenerateReportRequest,
-  GenerateReportResponse
+  GenerateReportResponse,
+  RefineReportRequest
 } from '../services/reportService'
 
 export interface UseReportReturn {
@@ -10,6 +12,7 @@ export interface UseReportReturn {
   loading: boolean
   error: string
   generateReport: (formData: GenerateReportRequest) => Promise<void>
+  refineReport: (refinementText: string, currentReport: string) => Promise<void>
   clearReport: () => void
   clearError: () => void
 }
@@ -50,6 +53,33 @@ export const useReport = (): UseReportReturn => {
     setError('')
   }
 
+  const refineReport = async (refinementText: string, currentReport: string): Promise<void> => {
+    // Validate refinement input
+    if (!refinementText.trim() || !currentReport.trim()) {
+      setError('Please provide refinement instructions')
+      return
+    }
+
+    setLoading(true)
+    setError('')
+
+    try {
+      const refinementData: RefineReportRequest = {
+        refinement_text: refinementText.trim(),
+        current_report: currentReport
+      }
+
+      const result = await refineReportService(refinementData)
+      setReportData(result) // Replace the current report with refined version
+      console.log('Report refined:', result)
+    } catch (error) {
+      console.error('Failed to refine report:', error)
+      setError('Failed to refine report. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const clearError = (): void => {
     setError('')
   }
@@ -62,6 +92,7 @@ export const useReport = (): UseReportReturn => {
 
     // Actions
     generateReport,
+    refineReport,
     clearReport,
     clearError
   }

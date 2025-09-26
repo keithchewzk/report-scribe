@@ -43,6 +43,9 @@ export interface StudentDetailsPanelProps {
 
 export interface ReportPanelProps {
   reportData: GenerateReportResponse | null
+  onRefineReport?: (refinementText: string, currentReport: string) => Promise<void>
+  loading?: boolean
+  error?: string
 }
 
 export interface FormChangeHandler {
