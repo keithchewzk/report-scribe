@@ -12,10 +12,12 @@ Report Scribe is a web application for school teachers to generate AI-powered st
 
 ## Technical Stack
 
-- **Framework**: React 19.1.0
+- **Framework**: React 19.1.0 with TypeScript
 - **Build Tool**: Vite
 - **Styling**: Inline styles with dark theme
-- **Architecture**: Component-based with modular organization
+- **Architecture**: Component-based with modular organization and custom hooks
+- **State Management**: Enhanced useReport hook with unified report operations
+- **API Integration**: Centralized service layer with TypeScript interfaces
 
 ## Code Organization
 
@@ -138,39 +140,67 @@ const colors = {
 
 **✅ Implemented Components:**
 
-**1. NameField (`NameField.jsx`)**
+**1. NameField (`NameField.tsx`)**
 - Controlled text input with real-time state updates
 - Responsive flex layout (grows with available space)
 - Focus/blur styling with border color transitions
 - Form validation integration
 
-**2. GenderField (`GenderField.jsx`)**  
+**2. GenderField (`GenderField.tsx`)**
 - Controlled select dropdown with Male/Female options
 - Fixed width (120px) for optimal layout
 - Dark theme styling with hover effects
 
-**3. PositiveAttributesField (`PositiveAttributesField.jsx`)**
+**3. PositiveAttributesField (`PositiveAttributesField.tsx`)**
 - Multi-select with 10 predefined positive attributes
-- Scrollable list (300px height) with checkbox interface  
+- Scrollable list (300px height) with checkbox interface
 - Custom attribute addition via text input + "Add Custom" button
 - Real-time selection counter display
 - Hover effects and visual feedback
 
-**4. Generate Report Button (`Button.jsx`)**
-- Form validation (name and gender required, positive attributes optional)
+**4. NegativeAttributesField (`NegativeAttributesField.tsx`)**
+- Multi-select with predefined areas for improvement
+- Similar interface to PositiveAttributesField
+- Custom attribute addition capability
+- Scrollable list with checkbox selection
+
+**5. InstructionsField (`InstructionsField.tsx`)**
+- Free-form textarea for additional context and instructions
+- Expandable input area with proper styling
+- Character count and validation
+
+**6. Generate Report Button (`Button.tsx`)**
+- Form validation (name and gender required, other fields optional)
 - API integration with `POST /report/generate`
 - Loading states with animated spinner
 - Error handling with user-friendly messages
 - Disabled state when form invalid or loading
 
-**🚧 Planned Components:**
-- **Areas for Improvement**: Multi-select field (similar to PositiveAttributesField)
-- **Additional Information**: Free-form textarea for extra context
 
 ### Report Generation & Refinement (Right Panel)
-- **Report Display**: Placeholder for generated report formatting (Report.jsx)
-- **Refinement Tools**: Placeholder for re-prompting interface (Refinement.jsx)
-- **Export Options**: Copy, download functionality (planned)
+
+**✅ Implemented Components:**
+
+**1. Report Display (`Report.tsx`)**
+- Displays generated/refined report content with proper formatting
+- Shows placeholder when no report exists
+- Scrollable content area with professional styling
+- Dark theme integration
+- Preserves formatting and line breaks from AI-generated content
+
+**2. Refinement Tools (`Refinement.tsx`)**
+- Interactive refinement interface with textarea input
+- API integration with `POST /report/refine` endpoint
+- Loading states with animated spinner during refinement
+- Real-time validation and error handling
+- Input clearing after successful refinement
+- Contextual placeholder text with refinement examples
+- Integrated with global loading/error state from useReport hook
+- Proper async handling with Promise-based API calls
+
+**🚧 Planned Features:**
+- **Export Options**: Copy, download functionality
+- **Refinement History**: Track multiple refinement iterations
 
 ## Development Workflow
 
@@ -320,21 +350,70 @@ function StudentForm({ onFormDataChange }) {
 }
 ```
 
-### API Integration
-```javascript
-// Button.jsx - API Calls
-const handleGenerateReport = async () => {
-  const payload = {
-    name: formData.name.trim(),
-    gender: formData.gender,
-    positive_attributes: formData.positiveAttributes  // Can be empty array
+### Enhanced API Integration
+
+**Service Layer (`services/reportService.ts`)**
+```typescript
+// TypeScript interfaces for type safety
+export interface GenerateReportRequest {
+  name: string
+  gender: 'Male' | 'Female'
+  positive_attributes: string[]
+  negative_attributes: string[]
+  instructions: string
+}
+
+export interface RefineReportRequest {
+  refinement_instructions: string
+  current_report: string
+}
+
+// Centralized API functions
+export const generateReport = async (formData: GenerateReportRequest): Promise<GenerateReportResponse> => {
+  // API call with proper error handling
+}
+
+export const refineReport = async (refinementData: RefineReportRequest): Promise<RefineReportResponse> => {
+  // API call to /report/refine endpoint
+}
+```
+
+**Custom Hook (`hooks/useReport.ts`)**
+```typescript
+export const useReport = (): UseReportReturn => {
+  const [reportData, setReportData] = useState<GenerateReportResponse | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string>('')
+
+  const generateReport = async (formData: GenerateReportRequest): Promise<void> => {
+    // Generate report with API integration
   }
 
-  const response = await fetch('/report/generate', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  })
+  const refineReport = async (refinementText: string, currentReport: string): Promise<void> => {
+    // Refine report with API integration
+    // Replaces reportData with refined version
+  }
+
+  return { reportData, loading, error, generateReport, refineReport, clearReport, clearError }
+}
+```
+
+**App-Level State Management (`App.tsx`)**
+```typescript
+const App: React.FC = () => {
+  const { reportData, loading, error, generateReport, refineReport } = useReport()
+
+  return (
+    <div>
+      <StudentDetailsPanel onGenerateReport={generateReport} loading={loading} error={error} />
+      <ReportPanel
+        reportData={reportData}
+        onRefineReport={refineReport}
+        loading={loading}
+        error={error}
+      />
+    </div>
+  )
 }
 ```
 

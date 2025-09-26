@@ -46,20 +46,24 @@ Frontend (Display/Refinement)
 - No business logic - pure infrastructure endpoints
 
 **3. Report Module (`src/report/`)**
-- **Router (`src/report/router.py`)**: Report-specific endpoints and business logic
+- **Router (`src/report/router.py`)**: Report-specific endpoints and business logic for both generation and refinement
 - **Schemas (`src/report/schemas.py`)**: Enhanced Pydantic models with Field constraints
-- **Domain Logic**: Report generation functions and validation
+- **Services (`src/report/services.py`)**: AI integration for both report generation and refinement
+- **Dependencies (`src/report/dependencies.py`)**: Dependency injection for services
 
 **4. Data Models (`src/report/schemas.py`)**
-- `ReportRequest`: Enhanced input validation with Field constraints and Literal types
-- `ReportResponse`: Output response model
+- `GenerateReportRequest`: Enhanced input validation for report generation with Field constraints and Literal types
+- `RefineReportRequest`: Input validation for report refinement with instruction length limits
+- `Report`: Unified output response model for both generation and refinement
 - Type safety with strict validation rules
 
-**5. Report Generation Logic**
-- AI-powered report generation with real LLM API calls
+**5. Report Generation & Refinement Logic**
+- AI-powered report generation with real LLM API calls (Google Gemini 2.0 Flash)
+- AI-powered report refinement based on user instructions
 - Contextual prompt engineering for professional student reports
-- Dynamic content generation based on student attributes
+- Dynamic content generation based on student attributes and refinement instructions
 - Robust error handling for API integration
+- Separate prompt strategies for generation vs refinement
 
 ## Project Structure
 
@@ -97,18 +101,12 @@ backend/
 
 **Request Schema:**
 ```python
-class ReportRequest(BaseModel):
+class GenerateReportRequest(BaseModel):
     name: str = Field(..., min_length=1, description="Student's full name")
     gender: Literal["Male", "Female"] = Field(..., description="Student's gender for pronoun context")
-    positive_attributes: list[str] = Field(..., description="List of positive attributes for the student")
-```
-
-**Response Schema:**
-```python
-class ReportResponse(BaseModel):
-    success: bool                # Operation success indicator
-    report: str                  # Generated report content
-    message: str = ""           # Additional status message
+    positive_attributes: list[str] = Field(default_factory=list, description="List of positive attributes for the student")
+    negative_attributes: list[str] = Field(default_factory=list, description="List of areas for improvement for the student")
+    instructions: str = Field(default="", description="Additional instructions for report generation")
 ```
 
 **Example Request to `/report/generate`:**
@@ -120,8 +118,44 @@ class ReportResponse(BaseModel):
     "Shows enthusiasm for learning",
     "Demonstrates leadership skills",
     "Exhibits excellent teamwork"
-  ]
+  ],
+  "negative_attributes": [
+    "Could improve focus during lessons",
+    "Needs to participate more in discussions"
+  ],
+  "instructions": "Keep the tone encouraging and focus on growth opportunities"
 }
+```
+
+### Report Refinement
+- **Endpoint**: `POST /report/refine` (with `/report` prefix from main.py)
+- **Content-Type**: `application/json`
+- **Purpose**: Refine existing student reports based on specific instructions
+
+**Request Schema:**
+```python
+class RefineReportRequest(BaseModel):
+    refinement_instructions: str = Field(..., min_length=1, max_length=1000, description="Instructions for refining the report")
+    current_report: str = Field(..., min_length=1, description="The current report content to be refined")
+```
+
+**Example Request to `/report/refine`:**
+```json
+{
+  "refinement_instructions": "Make it shorter and focus more on math skills",
+  "current_report": "Student Report for Keith Chew\n\nKeith consistently demonstrates initiative..."
+}
+```
+
+### Unified Response Schema
+Both endpoints return the same response format:
+
+**Response Schema:**
+```python
+class Report(BaseModel):
+    success: bool                # Operation success indicator
+    report: str                  # Generated/refined report content
+    message: str                 # Status message
 ```
 
 **Example Response:**
@@ -273,10 +307,15 @@ python-multipart==0.0.6   # Form data support
 # Health check
 curl http://localhost:8000/health
 
-# Report generation (now with real LLM calls)
+# Report generation (with real LLM calls)
 curl -X POST "http://localhost:8000/report/generate" \
   -H "Content-Type: application/json" \
-  -d '{"name": "Test Student", "gender": "Male", "positive_attributes": ["Shows enthusiasm"]}'
+  -d '{"name": "Test Student", "gender": "Male", "positive_attributes": ["Shows enthusiasm"], "negative_attributes": ["Could improve focus"], "instructions": "Keep it encouraging"}'
+
+# Report refinement (with real LLM calls)
+curl -X POST "http://localhost:8000/report/refine" \
+  -H "Content-Type: application/json" \
+  -d '{"refinement_instructions": "Make it shorter and more specific", "current_report": "Student Report for Test Student..."}'
 ```
 
 ### Interactive Testing
