@@ -1,3 +1,5 @@
+import logging
+import json
 import httpx
 from src.settings import settings
 
@@ -6,6 +8,9 @@ class ModelService:
     """Service class for handling LLM API interactions"""
 
     def __init__(self):
+        # Logger instance
+        self.logger = logging.getLogger(__name__)
+
         # LLM Configuration
         self.temperature = 0.7
         self.top_p = 0.8
@@ -35,7 +40,6 @@ class ModelService:
 
     async def generate_content(self, prompt: str) -> str:
         """Generate content using Google Gemini 2.0 Flash API"""
-
         if not settings.gemini_api_key:
             raise ValueError("GEMINI_API_KEY not configured")
 
@@ -54,6 +58,9 @@ class ModelService:
             },
             "safetySettings": self.safety_settings,
         }
+
+        # Log the payload being sent to the LLM (excluding API key)
+        self.logger.info(f"LLM API call payload: {json.dumps(payload, indent=2)}")
 
         try:
             async with httpx.AsyncClient(timeout=30.0) as client:

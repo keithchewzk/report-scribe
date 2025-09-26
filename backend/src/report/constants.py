@@ -18,8 +18,8 @@ Please write a professional, positive, and constructive student report following
 6. Balance positive feedback with constructive suggestions for improvement
 7. End with encouragement and specific next steps for continued growth
 8. Keep the tone professional yet supportive - suitable for parent communication
-9. Follow any additional instructions provided above (they take priority)
-10. Length: 200-400 words (unless specified otherwise in instructions)
+9. IMPORTANT: Follow any additional instructions provided above - they take priority over all other guidelines
+10. Default length: 200-400 words (but if specific length is mentioned in additional instructions, follow that exactly)
 
 The report should sound like it was written by a caring teacher who knows the student well and wants to support their continued development."""
 
