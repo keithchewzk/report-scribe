@@ -3,7 +3,7 @@ import logging
 from fastapi import APIRouter, Depends, HTTPException
 from src.report.dependencies import get_report_service
 from src.report.schemas import GenerateReportRequest, RefineReportRequest, Report
-from src.report.services import ReportService
+from src.report.service import ReportService
 
 logger = logging.getLogger(__name__)
 

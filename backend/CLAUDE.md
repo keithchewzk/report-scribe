@@ -45,25 +45,30 @@ Frontend (Display/Refinement)
 - General application information endpoints
 - No business logic - pure infrastructure endpoints
 
-**3. Report Module (`src/report/`)**
+**3. Model Module (`src/model/`)**
+- **Service (`src/model/service.py`)**: Centralized LLM API integration with Google Gemini 2.0 Flash
+- **Configuration Management**: Temperature, topP, topK, safety settings, and other LLM parameters
+- **HTTP Client**: Handles all API communication, error handling, and response parsing
+- **Provider Abstraction**: Clean interface for future support of multiple LLM providers
+
+**4. Report Module (`src/report/`)**
 - **Router (`src/report/router.py`)**: Report-specific endpoints and business logic for both generation and refinement
 - **Schemas (`src/report/schemas.py`)**: Enhanced Pydantic models with Field constraints
-- **Services (`src/report/services.py`)**: AI integration for both report generation and refinement
-- **Dependencies (`src/report/dependencies.py`)**: Dependency injection for services
+- **Service (`src/report/service.py`)**: Report business logic and prompt engineering
+- **Dependencies (`src/report/dependencies.py`)**: Dependency injection for both ModelService and ReportService
 
-**4. Data Models (`src/report/schemas.py`)**
+**5. Data Models (`src/report/schemas.py`)**
 - `GenerateReportRequest`: Enhanced input validation for report generation with Field constraints and Literal types
 - `RefineReportRequest`: Input validation for report refinement with instruction length limits
 - `Report`: Unified output response model for both generation and refinement
 - Type safety with strict validation rules
 
-**5. Report Generation & Refinement Logic**
-- AI-powered report generation with real LLM API calls (Google Gemini 2.0 Flash)
-- AI-powered report refinement based on user instructions
-- Contextual prompt engineering for professional student reports
-- Dynamic content generation based on student attributes and refinement instructions
-- Robust error handling for API integration
-- Separate prompt strategies for generation vs refinement
+**6. Service Architecture**
+- **Separation of Concerns**: ModelService handles LLM integration, ReportService handles business logic
+- **Dependency Injection**: ReportService depends on ModelService for AI functionality
+- **Contextual prompt engineering**: Specialized prompts for generation vs refinement
+- **Centralized configuration**: All LLM settings managed in ModelService
+- **Extensible design**: Easy to add new LLM providers or modify AI parameters
 
 ## Project Structure
 
@@ -73,10 +78,16 @@ backend/
 │   ├── __init__.py      # Python package marker
 │   ├── main.py          # FastAPI app initialization and middleware
 │   ├── router.py        # General endpoints (health, root)
+│   ├── settings.py      # Application configuration
+│   ├── model/           # LLM service module
+│   │   ├── __init__.py  # Python package marker
+│   │   └── service.py   # ModelService - LLM API integration
 │   └── report/          # Report domain module
 │       ├── __init__.py  # Python package marker
+│       ├── dependencies.py # Dependency injection for services
 │       ├── router.py    # Report-specific endpoints and business logic
-│       └── schemas.py   # Report Pydantic models with validation
+│       ├── schemas.py   # Report Pydantic models with validation
+│       └── service.py   # ReportService - report business logic
 ├── requirements.txt     # Python dependencies
 ├── Dockerfile           # Docker build (copies src/ directory)
 ├── .dockerignore        # Docker build exclusions
@@ -299,6 +310,80 @@ python-multipart==0.0.6   # Form data support
 - **Uvicorn**: High-performance ASGI server with WebSocket support
 - **Pydantic**: Runtime type checking and validation
 - **Python-multipart**: Future support for file uploads
+
+## Service Architecture
+
+### ModelService (`src/model/service.py`)
+
+**Purpose**: Centralized LLM API integration and configuration management
+
+**Key Features:**
+- **LLM Configuration**: Centralized management of temperature (0.7), topP (0.8), topK (40), maxOutputTokens (1000)
+- **Safety Settings**: Comprehensive content filtering for harassment, hate speech, explicit content, and dangerous content
+- **HTTP Client**: Async HTTP client with 30-second timeout and proper error handling
+- **Response Parsing**: Robust parsing of Gemini API response structure
+- **Error Handling**: Comprehensive error handling for timeouts, HTTP errors, and API failures
+
+**Core Method:**
+```python
+async def generate_content(self, prompt: str) -> str:
+    # Single method that handles all LLM interactions
+    # Takes any prompt, returns generated content
+    # Handles HTTP requests, response parsing, and error handling
+```
+
+**Benefits:**
+- **Provider Abstraction**: Easy to swap LLM providers (OpenAI, Claude, etc.)
+- **Configuration Centralization**: All LLM settings in one place
+- **Reusability**: Can be used by any service that needs LLM functionality
+- **Testability**: Easy to mock for testing other services
+
+### ReportService (`src/report/service.py`)
+
+**Purpose**: Report-specific business logic and prompt engineering
+
+**Key Features:**
+- **Dependency Injection**: Takes ModelService as constructor parameter
+- **Prompt Engineering**: Specialized prompt building for generation vs refinement
+- **Business Logic**: Report-specific logic separate from LLM implementation
+- **Clean Interface**: Simple async methods for generate and refine operations
+
+**Core Methods:**
+```python
+async def generate_report(self, request: GenerateReportRequest) -> str:
+    prompt = self._build_report_prompt(request)
+    return await self.model_service.generate_content(prompt)
+
+async def refine_report(self, request: RefineReportRequest) -> str:
+    prompt = self._build_refinement_prompt(request)
+    return await self.model_service.generate_content(prompt)
+```
+
+**Benefits:**
+- **Single Responsibility**: Only handles report business logic
+- **Testability**: Can easily mock ModelService for unit testing
+- **Maintainability**: Changes to LLM integration don't affect report logic
+- **Clarity**: Clear separation between prompt building and LLM calls
+
+### Dependency Injection (`src/report/dependencies.py`)
+
+**Purpose**: Manages service instantiation and dependency injection
+
+**Structure:**
+```python
+def get_model_service() -> ModelService:
+    return ModelService()
+
+def get_report_service(model_service: ModelService = None) -> ReportService:
+    if model_service is None:
+        model_service = get_model_service()
+    return ReportService(model_service)
+```
+
+**Benefits:**
+- **Flexibility**: Easy to configure different service instances
+- **Testing**: Can inject mock services for testing
+- **Lifecycle Management**: Controls service creation and dependency resolution
 
 ## Testing & Quality Assurance
 

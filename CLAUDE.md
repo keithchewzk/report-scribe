@@ -62,13 +62,17 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 
 **Backend:**
 - FastAPI application with enhanced Pydantic data validation (Field constraints)
-- Modular architecture with domain-separated routers (general + report modules)
+- **Refactored Service Architecture**: Separation of concerns with ModelService and ReportService
+- **ModelService**: Centralized LLM API integration with configuration management
+- **ReportService**: Focused report business logic with dependency injection
+- Modular architecture with domain-separated modules (general, model, report)
 - `/health` endpoint for monitoring
 - `/report/generate` endpoint for initial report generation
 - `/report/refine` endpoint for AI-powered report refinement
-- AI integration with Google Gemini 2.0 Flash API for both generation and refinement
+- AI integration with Google Gemini 2.0 Flash API through ModelService abstraction
 - Refactored schema: GenerateReportRequest, RefineReportRequest, and unified Report response
-- Advanced prompt engineering for both generation and refinement contexts
+- Advanced prompt engineering separated from LLM implementation details
+- Extensible design for future LLM provider support
 - CORS configuration for frontend integration
 - Docker containerization with optimized src/ directory structure
 - Virtual environment setup with requirements.txt
@@ -93,7 +97,10 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 - **Framework**: Python FastAPI 0.104.1
 - **Server**: Uvicorn ASGI server with auto-reload
 - **Location**: `/backend/` (source code in `/backend/src/`)
-- **Architecture**: Domain-driven modular structure with separated concerns (general + report modules)
+- **Architecture**: Clean service-oriented architecture with separation of concerns
+  - **ModelService**: Centralized LLM API integration and configuration
+  - **ReportService**: Report business logic with dependency injection
+  - **Domain modules**: general, model, report with clear boundaries
 - **Data Validation**: Enhanced Pydantic models with Field constraints and Literal types
 - **API Endpoints**:
   - `GET /health` - Health check endpoint (general module)
@@ -103,7 +110,8 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 - **Generation Request Format**: `{ "name": "string", "gender": Literal["Male", "Female"], "positive_attributes": ["string"], "negative_attributes": ["string"], "instructions": "string" }`
 - **Refinement Request Format**: `{ "refinement_instructions": "string", "current_report": "string" }`
 - **Unified Response Format**: `{ "success": boolean, "report": "string", "message": "string" }`
-- **AI Integration**: Google Gemini 2.0 Flash API with specialized prompts for generation vs refinement
+- **AI Integration**: Google Gemini 2.0 Flash API through ModelService abstraction
+- **Service Benefits**: Testable, extensible, provider-agnostic LLM integration
 - **Deployment**: Docker support with optimized src/ directory copying
 - **Development**: Python virtual environment with dependency isolation
 
