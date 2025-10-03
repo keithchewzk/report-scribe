@@ -27,7 +27,7 @@ class Settings(BaseSettings):
 
     # CORS Configuration
     cors_origins: List[str] = Field(
-        default=["http://localhost:5173", "http://localhost:3000"],
+        default=["http://localhost:5173", "http://localhost:3000", "https://reportscribe.up.railway.app"],
         description="Allowed CORS origins",
     )
 
