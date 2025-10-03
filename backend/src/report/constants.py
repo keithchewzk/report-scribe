@@ -14,7 +14,7 @@ Please write a professional, positive, and constructive student report following
 2. Incorporate the positive attributes naturally into meaningful sentences
 3. Address areas for improvement constructively and professionally
 4. Use proper pronouns ({pronoun}/{possessive}) throughout
-5. Include 2-3 paragraphs covering strengths, areas for growth, and overall progress
+5. Do not start with "Here is a report for ..." or similar. Just get straight to the report.
 6. Balance positive feedback with constructive suggestions for improvement
 7. End with encouragement and specific next steps for continued growth
 8. Keep the tone professional yet supportive - suitable for parent communication
@@ -38,7 +38,7 @@ Please refine the above student report according to the provided instructions. F
 2. Keep the same student name and basic structure unless specifically instructed otherwise
 3. Apply the refinement instructions while preserving the core positive message
 4. Ensure the refined report flows naturally and reads professionally
-5. Maintain appropriate length (200-400 words unless specified otherwise)
+5. Do not start with "Here is a report for ..." or similar. Just get straight to the report.
 6. Keep proper grammar, spelling, and formatting
 7. Preserve any positive achievements mentioned unless specifically asked to modify them
 8. If asked to shorten, prioritize the most important points
