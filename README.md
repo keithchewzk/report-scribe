@@ -1,9 +1,8 @@
 <a id="readme-top"></a>
 
-<br />
 <div align="center">
   <a href="https://github.com/keithchewzk/report-scribe">
-    <img src="frontend/public/report-scribe.svg" alt="Logo" width="100" height="100">
+    <img src="frontend/public/report-scribe.svg" alt="Logo" width="120" height="120">
   </a>
 
 <h3 align="center">Report Scribe</h3>
