@@ -1,3 +1,6 @@
+<a id="readme-top"></a>
+
+<br />
 <div align="center">
   <a href="https://github.com/keithchewzk/report-scribe">
     <img src="frontend/public/report-scribe.svg" alt="Logo" width="100" height="100">
@@ -12,28 +15,25 @@
 
 
 <details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
 </details>
 
 
@@ -57,7 +57,7 @@
 #### Frontend
 [![React][React.js]][React-url] [![Vite][Vite.js]][Vite-url] [![TypeScript][TypeScript.js]][TypeScript-url]
 
-#### Backend 
+#### Backend 
 [![Python][Python.js]][Python-url] [![FastAPI][FastAPI.js]][FastAPI-url] [![Pydantic][Pydantic.js]][Pydantic-url] [![Google Gemini][Gemini.js]][Gemini-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -84,22 +84,22 @@ Ensure you have the following installed:
     git clone https://github.com/keithchewzk/report-scribe.git
     ```
 
-3.  **Backend Setup (Python FastAPI)**
+2.  **Backend Setup (Python FastAPI)**
     ```bash
     cd backend
     python3 -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scripts\activate
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
     pip install -r requirements.txt
     # Set up your Gemini API key as an environment variable
     uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
     # Access API Docs at http://localhost:8000/docs
     ```
 
-4.  **Frontend Setup (React/Vite)**
+3.  **Frontend Setup (React/Vite)**
     ```bash
     cd ../frontend
     npm install
-    npm run dev          # Starts on http://localhost:5173
+    npm run dev          # Starts on http://localhost:5173
     ```
 
 #### Docker Deployment
@@ -148,12 +148,10 @@ See the [open issues](https://github.com/keithchewzk/report-scribe/issues) for a
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
 ## Contact
 [![LinkedIn][LinkedIn.badge]][LinkedIn.url] [![GitHub][GitHub.badge]][GitHub.url] [![Email][Email.badge]][Email.url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
