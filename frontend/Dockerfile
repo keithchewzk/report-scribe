@@ -10,6 +10,9 @@ COPY . .
 
 EXPOSE 5173
 
+# Install curl for healthcheck
+RUN apk add --no-cache curl
+
 # Health check for dev mode
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD if [ "$HOT_RELOAD" = "1" ]; then curl -f http://localhost:5173/ || exit 1; else curl -f http://localhost:80/ || exit 1; fi
