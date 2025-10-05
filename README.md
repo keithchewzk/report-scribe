@@ -19,6 +19,7 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
+        <li><a href="#core-features">Core Features</a></li>
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
@@ -26,10 +27,16 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#frontend-and-backend-setup-using-docker-compose">Frontend and Backend Setup Using Docker Compose</a></li>
+        <li><a href="#notes">Notes</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li>
+      <a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#report-creation--refinement-flow">Report Creation & Refinement Flow</a></li>
+      </ul>
+    </li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
