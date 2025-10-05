@@ -63,63 +63,54 @@
 
 ## Getting Started
 
-To get a local copy of the project running, follow these steps for either local development or Docker containerization.
+This guide explains how to run the **frontend** and **backend** locally using Docker Compose.
 
 ### Prerequisites
 
-Ensure you have the following installed:
+- **Node.js** and **npm** (for React/Vite frontend)
+- **Python 3** and **pip** (for FastAPI backend)
+- **Docker & Docker Compose** (for containerized development)
+- **Google AI API Key** (required for Gemini API access)
 
-- **Node.js** and **npm** (for the React frontend)
-- **Python 3** and **pip** (for the FastAPI backend)
-- **Docker** (for containerized deployment)
-- **Google AI API Key** (required to run the backend service and access the Gemini API).
+> Sensitive keys should be stored in `.env` or as shell environment variables. Do **not** commit them to Git.
 
-### Installation
+---
 
-#### Local Development
+### Frontend and Backend Setup Using Docker Compose
 
-1.  **Clone the repo**
+1. Ensure you have a `.env` file in the backend directory containing your Google Gemini API key:
 
-    ```sh
-    git clone https://github.com/keithchewzk/report-scribe.git
-    ```
+```env
+GOOGLE_GEMINI_API_KEY=your_api_key_here
+```
 
-2.  **Backend Setup (Python FastAPI)**
+2. Run both services:
 
-    ```bash
-    cd backend
-    python3 -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scripts\activate
-    pip install -r requirements.txt
-    # Set up your Gemini API key as an environment variable
-    uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
-    # Access API Docs at http://localhost:8000/docs
-    ```
+```bash
+docker compose -f docker-compose.dev.yml up --build
+```
 
-3.  **Frontend Setup (React/Vite)**
-    ```bash
-    cd ../frontend
-    npm install
-    npm run dev          # Starts on http://localhost:5173
-    ```
+3. Access services in the browser:
 
-#### Docker Deployment
+- Frontend: `http://localhost:3000`
+- Backend API: `http://localhost:8000`
+- Backend API Docs: `http://localhost:8000/docs`
 
-You can run both services containerized for integration testing.
+4. Stop the services:
 
-1.  **Build and Run Backend (Port: 8000)**
-    ```bash
-    cd backend
-    docker build -t report-scribe-backend .
-    docker run -d -p 8000:8000 report-scribe-backend
-    ```
-2.  **Build and Run Frontend (Port: 3000)**
-    ```bash
-    cd ../frontend
-    docker build -t report-scribe-frontend .
-    docker run -d -p 3000:80 --name report-scribe-frontend-container report-scribe-frontend
-    # Access the application at http://localhost:3000
-    ```
+```bash
+docker compose -f docker-compose.dev.yml down
+```
+
+> Both frontend and backend will hot reload automatically on code changes.
+
+---
+
+### Notes
+
+- **.env.example** provides safe default values for local development. Copy it to `.env` and fill in sensitive keys.
+- Hot reload is enabled for all services when running in development mode.
+- Docker Compose ensures both services run together in a local network, simplifying integration testing.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
