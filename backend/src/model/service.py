@@ -43,10 +43,8 @@ class ModelService:
         if not settings.gemini_api_key:
             raise ValueError("GEMINI_API_KEY not configured")
 
-        # Gemini 2.0 Flash API endpoint
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key={settings.gemini_api_key}"
 
-        # Request payload structure for Gemini API
         payload = {
             "contents": [{"parts": [{"text": prompt}]}],
             "generationConfig": {
@@ -59,7 +57,6 @@ class ModelService:
             "safetySettings": self.safety_settings,
         }
 
-        # Log the payload being sent to the LLM (excluding API key)
         self.logger.info(f"LLM API call payload: {json.dumps(payload, indent=2)}")
 
         try:
