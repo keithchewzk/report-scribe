@@ -7,6 +7,7 @@ Report Scribe is a web application designed to streamline the student report wri
 ## Problem Statement
 
 School teachers spend considerable time writing individualized student reports. While teachers have adopted LLMs to accelerate this process, the current workflow still requires:
+
 - Manual typing of student names and attributes
 - Repetitive copying/pasting in generic LLM interfaces
 - Multiple hours per class of students
@@ -16,12 +17,13 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 
 ## Target User
 
-**Primary User**: School teachers who need to write regular student reports
+**Primary User**: School teachers who need to write regular student reports  
 **Use Case**: Generating personalized, professional student reports for parent communication
 
 ## Core Features
 
 ### Student Information Input
+
 1. **Student Name**: Text input field with real-time validation
 2. **Gender Selection**: Single select dropdown (Male/Female) for LLM context clarity
 3. **Positive Attributes**: Multi-select from 10 predefined options with custom attribute addition capability
@@ -37,6 +39,7 @@ Report Scribe addresses these pain points by providing a purpose-built interface
    - Character validation and proper formatting
 
 ### Report Generation & Refinement
+
 - **API Integration**: POST requests to `/report/generate` and `/report/refine` endpoints with structured JSON payload
 - **Form Validation**: Real-time validation ensuring all required fields are completed
 - **Loading States**: Visual feedback during report generation and refinement with animated spinner
@@ -46,9 +49,11 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 - **Unified state management**: Single source of truth for report data across both operations
 
 ### Current Implementation Status
+
 ✅ **Completed Features:**
 
 **Frontend:**
+
 - Two-panel dark theme interface (StudentDetailsPanel + ReportPanel)
 - Enhanced form state management with controlled components and TypeScript
 - Complete student input form: Name, Gender, Positive Attributes, Areas for Improvement, and Instructions
@@ -61,6 +66,7 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 - Real-time report display and interactive refinement tools
 
 **Backend:**
+
 - FastAPI application with enhanced Pydantic data validation (Field constraints)
 - **Refactored Service Architecture**: Separation of concerns with ModelService and ReportService
 - **ModelService**: Centralized LLM API integration with configuration management
@@ -74,26 +80,27 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 - Advanced prompt engineering separated from LLM implementation details
 - Extensible design for future LLM provider support
 - CORS configuration for frontend integration
-- Docker containerization with optimized src/ directory structure
+- Docker Compose support for local development with hot reload
 - Virtual environment setup with requirements.txt
 
 🚧 **In Development:**
-- Export functionality (copy, download)
-- Refinement history tracking
-- Batch processing for multiple students
+
+- None
 
 ## Technical Architecture
 
 ### Frontend
+
 - **Framework**: React 19.1.0 with hooks (useState for state management)
 - **Build Tool**: Vite
 - **Location**: `/frontend/`
-- **Architecture**: Modular component-based with Index File Pattern (Option 3)
+- **Architecture**: Modular component-based with Index File Pattern
 - **Styling**: Inline styles with dark theme color palette
 - **State Management**: Lifted state pattern with controlled components
 - **Purpose**: Two-panel interface for data input, report generation, and editing
 
 ### Backend
+
 - **Framework**: Python FastAPI 0.104.1
 - **Server**: Uvicorn ASGI server with auto-reload
 - **Location**: `/backend/` (source code in `/backend/src/`)
@@ -103,30 +110,29 @@ Report Scribe addresses these pain points by providing a purpose-built interface
   - **Domain modules**: general, model, report with clear boundaries
 - **Data Validation**: Enhanced Pydantic models with Field constraints and Literal types
 - **API Endpoints**:
-  - `GET /health` - Health check endpoint (general module)
-  - `POST /report/generate` - Generate student reports from structured input (report module)
-  - `POST /report/refine` - Refine existing reports with custom instructions (report module)
-  - `GET /` - Root endpoint with API information (general module)
+  - `GET /health` - Health check endpoint
+  - `POST /report/generate` - Generate student reports from structured input
+  - `POST /report/refine` - Refine existing reports with custom instructions
+  - `GET /` - Root endpoint with API information
 - **Generation Request Format**: `{ "name": "string", "gender": Literal["Male", "Female"], "positive_attributes": ["string"], "negative_attributes": ["string"], "instructions": "string" }`
 - **Refinement Request Format**: `{ "refinement_instructions": "string", "current_report": "string" }`
 - **Unified Response Format**: `{ "success": boolean, "report": "string", "message": "string" }`
 - **AI Integration**: Google Gemini 2.0 Flash API through ModelService abstraction
-- **Service Benefits**: Testable, extensible, provider-agnostic LLM integration
-- **Deployment**: Docker support with optimized src/ directory copying
+- **Deployment**: Docker Compose for local development; Dockerfile builds for production
 - **Development**: Python virtual environment with dependency isolation
 
 ### Development Workflow
+
 - **Frontend**: Vite dev server on http://localhost:5173
 - **Backend**: FastAPI with Uvicorn on http://localhost:8000
 - **Integration**: CORS enabled for cross-origin requests
-- **Docker**: Both services containerized for production deployment
-  - Frontend: Multi-stage build with nginx proxy for `/report/*` routes on http://localhost:3000
-  - Backend: Python slim container with health checks on http://localhost:8000
+- **Docker Compose**: Single command runs both services locally with hot reload
 - **API Communication**: RESTful JSON API between frontend and backend
 
 ## Key User Flows
 
 1. **Complete Report Creation & Refinement Flow**:
+
    - Teacher enters student name in responsive text field
    - Selects gender from dropdown (Male/Female)
    - Selects positive attributes from scrollable multi-select list
@@ -144,6 +150,7 @@ Report Scribe addresses these pain points by providing a purpose-built interface
    - Success/error feedback displayed throughout the process
 
 2. **Planned Enhanced Flow**:
+
    - Add export/copy functionality for generated reports
    - Implement refinement history tracking
    - Add batch processing for multiple students
@@ -168,43 +175,42 @@ Report Scribe addresses these pain points by providing a purpose-built interface
 
 ## Commands
 
-### Frontend Development
+### Local Development Using Docker Compose
 
-**Local Development:**
+```bash
+# Ensure backend/.env contains your GOOGLE_GEMINI_API_KEY
+docker compose -f docker-compose.dev.yml up --build
+
+# Access frontend at http://localhost:3000
+# Access backend API at http://localhost:8000
+# Access API docs at http://localhost:8000/docs
+
+# Stop services
+docker compose -f docker-compose.dev.yml down
+```
+
+### Frontend Only (Optional)
+
 ```bash
 cd frontend
-npm run dev          # Start development server (http://localhost:5173)
+npm install
+npm run dev          # Starts Vite dev server on http://localhost:5173
 npm run build        # Build for production
 npm run preview      # Preview production build
 ```
 
-**Docker Development:**
-```bash
-cd frontend
-docker build -t report-scribe-frontend .
-docker run -d -p 3000:80 --name report-scribe-frontend-container report-scribe-frontend
-# Access at http://localhost:3000
-```
+### Backend Only (Optional)
 
-### Backend Development
-
-**Local Development:**
 ```bash
 cd backend
 python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
-```
 
-**Docker Development:**
-```bash
-cd backend
-docker build -t report-scribe-backend .
-docker run -p 8000:8000 report-scribe-backend
+# API Endpoints
+# Health: http://localhost:8000/health
+# Docs: http://localhost:8000/docs
+# Generate: POST http://localhost:8000/report/generate
+# Refine: POST http://localhost:8000/report/refine
 ```
-
-**API Endpoints:**
-- Health Check: http://localhost:8000/health
-- Interactive Docs: http://localhost:8000/docs
-- Report Generation: POST http://localhost:8000/report/generate

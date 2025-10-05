@@ -1,5 +1,2 @@
 # VS Code settings
 .vscode/
-*.pem
-start_claude.sh
-CLAUDE.md
