@@ -7,11 +7,11 @@
 
 <h3 align="center">Report Scribe</h3>
 
-  <p align="center">
+<p align="center">
     A web application that uses AI (Google Gemini 2.0 Flash) to generate personalized student reports for school teachers, streamlining the process and significantly reducing time and manual effort.
   </p>
-</div>
 
+</div>
 
 <details>
   <summary>Table of Contents</summary>
@@ -35,32 +35,31 @@
   </ol>
 </details>
 
-
 ## About The Project
 
 **Report Scribe** is a purpose-built web application designed to streamline the student report writing process for school teachers. It leverages AI to generate personalized student reports, significantly reducing the time and manual effort traditionally associated with this task. The application replaces repetitive manual typing and copying/pasting in generic LLM interfaces with a structured, efficient, two-panel interface for data input and refinement.
 
 ### Core Features
 
-* **Structured Input:** Dedicated fields for Student Name, Gender, Positive Attributes, Areas for Improvement, and custom instructions.
-* **AI Generation:** Integrates with the **Google Gemini 2.0 Flash API** for initial report generation (`POST /report/generate`).
-* **AI Refinement:** Post-generation refinement capability using custom instructions (`POST /report/refine`).
-* **User Interface:** Two-panel dark theme interface (StudentDetailsPanel + ReportPanel) built with React.
-* **Robust Backend:** Service-oriented FastAPI architecture with Pydantic validation and clear separation of concerns (ModelService, ReportService).
+- **Structured Input:** Dedicated fields for Student Name, Gender, Positive Attributes, Areas for Improvement, and custom instructions.
+- **AI Generation:** Integrates with the **Google Gemini 2.0 Flash API** for initial report generation (`POST /report/generate`).
+- **AI Refinement:** Post-generation refinement capability using custom instructions (`POST /report/refine`).
+- **User Interface:** Two-panel dark theme interface (StudentDetailsPanel + ReportPanel) built with React.
+- **Robust Backend:** Service-oriented FastAPI architecture with Pydantic validation and clear separation of concerns (ModelService, ReportService).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 ### Built With
 
 #### Frontend
+
 [![React][React.js]][React-url] [![Vite][Vite.js]][Vite-url] [![TypeScript][TypeScript.js]][TypeScript-url]
 
 #### Backend 
+
 [![Python][Python.js]][Python-url] [![FastAPI][FastAPI.js]][FastAPI-url] [![Pydantic][Pydantic.js]][Pydantic-url] [![Google Gemini][Gemini.js]][Gemini-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 ## Getting Started
 
@@ -69,21 +68,24 @@ To get a local copy of the project running, follow these steps for either local 
 ### Prerequisites
 
 Ensure you have the following installed:
-* **Node.js** and **npm** (for the React frontend)
-* **Python 3** and **pip** (for the FastAPI backend)
-* **Docker** (for containerized deployment)
-* **Google AI API Key** (required to run the backend service and access the Gemini API).
+
+- **Node.js** and **npm** (for the React frontend)
+- **Python 3** and **pip** (for the FastAPI backend)
+- **Docker** (for containerized deployment)
+- **Google AI API Key** (required to run the backend service and access the Gemini API).
 
 ### Installation
 
 #### Local Development
 
 1.  **Clone the repo**
+
     ```sh
     git clone https://github.com/keithchewzk/report-scribe.git
     ```
 
 2.  **Backend Setup (Python FastAPI)**
+
     ```bash
     cd backend
     python3 -m venv venv
@@ -121,7 +123,6 @@ You can run both services containerized for integration testing.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 ## Usage
 
 The primary usage flow involves structured data input and AI-powered refinement.
@@ -135,23 +136,21 @@ The primary usage flow involves structured data input and AI-powered refinement.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 ## Roadmap
 
 Features currently **in development** and planned for the next release:
 
-* [x] None at the moment
+- [x] None at the moment
 
 See the [open issues](https://github.com/keithchewzk/report-scribe/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 ## Contact
+
 [![LinkedIn][LinkedIn.badge]][LinkedIn.url] [![GitHub][GitHub.badge]][GitHub.url] [![Email][Email.badge]][Email.url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
