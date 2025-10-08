@@ -1,8 +1,8 @@
 <a id="readme-top"></a>
 
 <div align="center">
-  <a href="https://github.com/keithchewzk/report-scribe">
-    <img src="frontend/public/report-scribe.svg" alt="Logo" width="120" height="120">
+  <a href="https://github.com/keithchewzk/reportscribe">
+    <img src="frontend/public/reportscribe.svg" alt="Logo" width="120" height="120">
   </a>
 
 <h3 align="center">ReportScribe</h3>
@@ -140,7 +140,7 @@ Features currently **in development** and planned for the next release:
 
 - [x] None at the moment
 
-See the [open issues](https://github.com/keithchewzk/report-scribe/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/keithchewzk/reportscribe/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

@@ -9,23 +9,27 @@ Choose one of the following methods to run the frontend:
 ## Method 1: Docker (Recommended)
 
 ### Prerequisites
+
 - Docker installed on your system
 
 ### Running with Docker
 
 1. **Navigate to frontend directory:**
+
    ```bash
    cd frontend
    ```
 
 2. **Build the Docker image:**
+
    ```bash
-   docker build -t report-scribe-frontend .
+   docker build -t reportscribe-frontend .
    ```
 
 3. **Run the container:**
+
    ```bash
-   docker run -d -p 3000:80 --name report-scribe-frontend-container report-scribe-frontend
+   docker run -d -p 3000:80 --name reportscribe-frontend-container reportscribe-frontend
    ```
 
 4. **Access the application:**
@@ -35,12 +39,14 @@ Choose one of the following methods to run the frontend:
 ## Method 2: Local Development
 
 ### Prerequisites
+
 - Node.js 20+ (required for Vite 7.x)
 - npm (Node package manager)
 
 ### Installation
 
 1. **Navigate to frontend directory:**
+
    ```bash
    cd frontend
    ```
@@ -53,33 +59,39 @@ Choose one of the following methods to run the frontend:
 ### Running the Development Server
 
 **Development server with hot reload:**
+
 ```bash
 npm run dev
 ```
 
 **Build for production:**
+
 ```bash
 npm run build
 ```
 
 **Preview production build:**
+
 ```bash
 npm run preview
 ```
 
 The application will be available at:
+
 - **Development**: http://localhost:5173
 - **Production Preview**: http://localhost:4173
 
 ## Architecture
 
 ### Component Structure
+
 - **Two-panel layout**: StudentDetailsPanel (left) + ReportPanel (right)
 - **Modular components**: Each panel broken into focused sub-components
 - **Controlled forms**: Lifted state pattern with form validation
 - **Dark theme**: Consistent styling across all components
 
 ### Key Features
+
 - **Student Information Input**: Name, gender, and positive attributes
 - **Multi-select attributes**: Predefined options + custom attribute addition
 - **Form validation**: Real-time validation with error feedback
@@ -89,10 +101,12 @@ The application will be available at:
 ## Docker Configuration
 
 ### Multi-stage Build
+
 - **Stage 1**: Node.js 20-alpine for building the React app
 - **Stage 2**: Nginx-alpine for serving static files
 
 ### Features
+
 - **API Proxy**: Built-in nginx proxy for `/api/*` requests to backend
 - **Health Check**: Container health monitoring
 - **Production optimized**: Minimal image size with static file serving
@@ -102,30 +116,32 @@ The application will be available at:
 
 ```bash
 # Build image
-docker build -t report-scribe-frontend .
+docker build -t reportscribe-frontend .
 
 # Run container
-docker run -d -p 3000:80 --name report-scribe-frontend-container report-scribe-frontend
+docker run -d -p 3000:80 --name reportscribe-frontend-container reportscribe-frontend
 
 # View logs
-docker logs report-scribe-frontend-container
+docker logs reportscribe-frontend-container
 
 # Stop container
-docker stop report-scribe-frontend-container
+docker stop reportscribe-frontend-container
 
 # Remove container
-docker rm report-scribe-frontend-container
+docker rm reportscribe-frontend-container
 ```
 
 ## Backend Integration
 
 ### API Communication
+
 - **Backend URL**: http://localhost:8000 (development)
 - **API Endpoint**: `POST /api/report` for report generation
 - **CORS**: Enabled for cross-origin requests in development
 - **Proxy**: Docker nginx proxy handles API requests in production
 
 ### Data Flow
+
 ```
 Form Input → Validation → API Request → Backend Processing → Response Display
 ```
@@ -170,15 +186,18 @@ frontend/
 ### Common Issues
 
 **Build fails with Vite not found:**
+
 - Ensure Node.js 20+ is installed
 - Run `npm ci` to install all dependencies including dev dependencies
 
 **API requests fail:**
+
 - Ensure backend is running on port 8000
 - Check CORS configuration in backend
 - Verify API endpoint URLs
 
 **Docker container won't start:**
+
 - Check if port 3000 is already in use
 - Verify Docker daemon is running
 - Check container logs with `docker logs <container_name>`

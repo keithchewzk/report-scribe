@@ -9,42 +9,48 @@ Choose one of the following methods to run the backend:
 ## Method 1: Docker (Recommended)
 
 ### Prerequisites
+
 - Docker installed on your system
 
 ### Running with Docker
 
 1. **Navigate to backend directory:**
+
    ```bash
    cd backend
    ```
 
 2. **Build the Docker image:**
+
    ```bash
-   docker build -t report-scribe-backend .
+   docker build -t reportscribe-backend .
    ```
 
 3. **Run the container:**
    ```bash
-   docker run -p 8000:8000 report-scribe-backend
+   docker run -p 8000:8000 reportscribe-backend
    ```
 
 ## Method 2: Local Development
 
 ### Prerequisites
+
 - Python 3.8 or higher
 - pip (Python package manager)
 
 ### Installation
 
 1. **Navigate to backend directory:**
+
    ```bash
    cd backend
    ```
 
 2. **Create virtual environment (recommended):**
+
    ```bash
    python3 -m venv venv
-   
+
    # Activate virtual environment
    # On macOS/Linux:
    source venv/bin/activate
@@ -60,16 +66,19 @@ Choose one of the following methods to run the backend:
 ### Running the Server
 
 **Development server with auto-reload:**
+
 ```bash
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 **Alternative (using Python directly):**
+
 ```bash
 python main.py
 ```
 
 The API will be available at:
+
 - **API Base URL**: http://localhost:8000
 - **Interactive Docs**: http://localhost:8000/docs (Swagger UI)
 - **Alternative Docs**: http://localhost:8000/redoc (ReDoc)
@@ -77,14 +86,17 @@ The API will be available at:
 ## API Endpoints
 
 ### Health Check
+
 - **GET** `/health`
 - Returns: `{"status": "healthy", "service": "Report Scribe API"}`
 
 ### Generate Report
+
 - **POST** `/api/report`
 - **Content-Type**: `application/json`
 
 **Request Body:**
+
 ```json
 {
   "name": "Keith Chew",
@@ -98,6 +110,7 @@ The API will be available at:
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -107,6 +120,7 @@ The API will be available at:
 ```
 
 **Error Response:**
+
 ```json
 {
   "detail": "Student name is required"
@@ -116,6 +130,7 @@ The API will be available at:
 ## Testing the API
 
 ### Using curl:
+
 ```bash
 # Health check
 curl http://localhost:8000/health
@@ -131,6 +146,7 @@ curl -X POST "http://localhost:8000/api/report" \
 ```
 
 ### Using the Interactive Docs:
+
 1. Start the server
 2. Open http://localhost:8000/docs in your browser
 3. Try out the endpoints directly in the Swagger UI
@@ -138,6 +154,7 @@ curl -X POST "http://localhost:8000/api/report" \
 ## Frontend Integration
 
 The backend is configured to accept requests from the frontend development server:
+
 - **Frontend URL**: http://localhost:5173 (Vite dev server)
 - **CORS**: Enabled for cross-origin requests
 
@@ -163,24 +180,26 @@ backend/
 ## Docker Commands
 
 ### Building and Running
+
 ```bash
 # Build the image
-docker build -t report-scribe-backend .
+docker build -t reportscribe-backend .
 
 # Run the container
-docker run -p 8000:8000 report-scribe-backend
+docker run -p 8000:8000 reportscribe-backend
 
 # Run with environment variables (if needed)
-docker run -p 8000:8000 -e ENVIRONMENT=production report-scribe-backend
+docker run -p 8000:8000 -e ENVIRONMENT=production reportscribe-backend
 
 # Run in detached mode
-docker run -d -p 8000:8000 report-scribe-backend
+docker run -d -p 8000:8000 reportscribe-backend
 ```
 
 ### Development with Docker
+
 ```bash
 # Build and run in one command
-docker build -t report-scribe-backend . && docker run -p 8000:8000 report-scribe-backend
+docker build -t reportscribe-backend . && docker run -p 8000:8000 reportscribe-backend
 
 # View logs
 docker logs <container_id>
