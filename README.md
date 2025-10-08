@@ -5,7 +5,7 @@
     <img src="frontend/public/report-scribe.svg" alt="Logo" width="120" height="120">
   </a>
 
-<h3 align="center">Report Scribe</h3>
+<h3 align="center">ReportScribe</h3>
 
 <p align="center">
     A web application that uses AI (Google Gemini 2.0 Flash) to generate personalized student reports for school teachers, streamlining the process and significantly reducing time and manual effort.
@@ -44,7 +44,7 @@
 
 ## About The Project
 
-**Report Scribe** is a purpose-built web application designed to streamline the student report writing process for school teachers. It leverages AI to generate personalized student reports, significantly reducing the time and manual effort traditionally associated with this task. The application replaces repetitive manual typing and copying/pasting in generic LLM interfaces with a structured, efficient, two-panel interface for data input and refinement.
+**ReportScribe** is a purpose-built web application designed to streamline the student report writing process for school teachers. It leverages AI to generate personalized student reports, significantly reducing the time and manual effort traditionally associated with this task. The application replaces repetitive manual typing and copying/pasting in generic LLM interfaces with a structured, efficient, two-panel interface for data input and refinement.
 
 ### Core Features
 
